@@ -156,6 +156,10 @@ interface FileApiSwagger
      *          description="successful operation",
      *      ),
      *     @OA\Response(
+     *          response=302,
+     *          description="invalid request",
+     *      ),
+     *     @OA\Response(
      *          response=401,
      *          description="endpoint requires authentication",
      *      ),

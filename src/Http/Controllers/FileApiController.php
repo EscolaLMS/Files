@@ -10,7 +10,6 @@ use EscolaLms\Files\Http\Requests\FileUploadRequest;
 use EscolaLms\Core\Http\Controllers\EscolaLmsBaseController;
 use EscolaLms\Files\Http\Services\Contracts\FileServiceContract;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\UploadedFile;
 
 class FileApiController extends EscolaLmsBaseController implements FileApiSwagger
 {
@@ -34,14 +33,14 @@ class FileApiController extends EscolaLmsBaseController implements FileApiSwagge
             $target = $request->get('target');
             $files = $request->file('file');
 
-            $list = $this->service->findList($target, $files);
+            $list = $this->service->findAll($target, $files);
             if (!empty($list)) {
                 return new JsonResponse([
                     'error' => sprintf("Following files already exist: %s", join(", ", $list))
                 ], 409);
             }
 
-            $this->service->putList($target, $files);
+            $this->service->putAll($target, $files);
 
             return new JsonResponse([
                 'success' => true

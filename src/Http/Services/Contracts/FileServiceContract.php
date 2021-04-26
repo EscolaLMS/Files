@@ -11,12 +11,12 @@ interface FileServiceContract
      * @param array $list List of Files
      * @return boolean
      */
-    function findList(string $directory, array $list);
+    function findAll(string $directory, array $list);
 
     /**
      * @param string $directory directory under which to file put in
      * @param array $list List of Files
      * @throws Exception
      */
-    function putList(string $directory, array $list);
+    function putAll(string $directory, array $list);
 }

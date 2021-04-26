@@ -22,6 +22,13 @@ class FileUploadRequest extends FormRequest
     public function rules()
     {
         return [
+            'target' => 'required',
+            'file' => 'required',
         ];
+    }
+
+    public function getAcceptableContentTypes()
+    {
+        return ['multipart/form-data'];
     }
 }
