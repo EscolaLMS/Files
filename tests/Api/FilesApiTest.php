@@ -1,6 +1,6 @@
 <?php
 
-namespace EscolaLms\Files\Tests\API;
+namespace EscolaLms\Files\Tests\Api;
 
 use EscolaLms\Files\Tests\TestCase;
 use Illuminate\Http\UploadedFile;
@@ -13,16 +13,16 @@ class FilesApiTest extends TestCase
 
     public function testSingleFileUpload()
     {
-        $name = 'photo1.jpg';
-        $file = UploadedFile::fake()->image($name);
+        $target = '/';
+        $file = UploadedFile::fake()->image('file');
         $response = $this->post(
             '/api/file/upload',
             [
-                'file[]'=>$file,
-                'target'=>$name
+                'file'=>[$file],
+                'target'=>$target,
             ],
         );
         $response->assertStatus(200);
-        $this->assertFileExists('photo1.jpg');
+        $this->assertFileExists($file->getClientOriginalName());
     }
 }

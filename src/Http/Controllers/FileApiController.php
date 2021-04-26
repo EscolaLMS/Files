@@ -30,20 +30,27 @@ class FileApiController extends EscolaLmsBaseController implements FileApiSwagge
      */
     public function upload(FileUploadRequest $request): JsonResponse
     {
-//        $request->get('target');
-        /** @var UploadedFile $file */
-        foreach ($request->allFiles() as $file) {
-            if ($this->service->exists())
-            $this->service->store(
-                $file->getClientOriginalName(),
-                $file->getATime(),
-                $file->getContent(),
-                $file->getMimeType(),
-            );
+        try {
+            $target = $request->get('target');
+            $files = $request->file('file');
+
+            $list = $this->service->findList($target, $files);
+            if (!empty($list)) {
+                return new JsonResponse([
+                    'error' => sprintf("Following files already exist: %s", join(", ", $list))
+                ], 409);
+            }
+
+            $this->service->putList($target, $files);
+
+            return new JsonResponse([
+                'success' => true
+            ], 200);
+        } catch (\Exception $exception) {
+            return new JsonResponse([
+                'message' => $exception->getMessage(),
+            ], 500);
         }
-        return new JsonResponse([
-            'success' => true
-        ], 200);
     }
 
     public function list(FileListingRequest $request): JsonResponse

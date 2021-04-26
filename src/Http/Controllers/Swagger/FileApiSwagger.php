@@ -121,6 +121,10 @@ interface FileApiSwagger
      *          description="user doesn't have required access rights",
      *      ),
      *     @OA\Response(
+     *          response=409,
+     *          description="one of the uploaded files already exists",
+     *      ),
+     *     @OA\Response(
      *          response=500,
      *          description="server-side error",
      *      ),
