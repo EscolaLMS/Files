@@ -1,0 +1,4 @@
+vendor/
+tags
+.phpunit.result.cache
+.idea/
