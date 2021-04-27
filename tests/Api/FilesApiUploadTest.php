@@ -6,7 +6,7 @@ use EscolaLms\Files\Tests\TestCase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
-class FilesApiTest extends TestCase
+class FilesApiUploadTest extends TestCase
 {
     public function testSingleFileUpload()
     {

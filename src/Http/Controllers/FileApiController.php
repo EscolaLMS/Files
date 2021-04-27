@@ -2,6 +2,7 @@
 
 namespace EscolaLms\Files\Http\Controllers;
 
+use DateTime;
 use EscolaLms\Files\Http\Controllers\Swagger\FileApiSwagger;
 use EscolaLms\Files\Http\Requests\FileDeleteRequest;
 use EscolaLms\Files\Http\Requests\FileListingRequest;
@@ -9,6 +10,7 @@ use EscolaLms\Files\Http\Requests\FileMoveRequest;
 use EscolaLms\Files\Http\Requests\FileUploadRequest;
 use EscolaLms\Core\Http\Controllers\EscolaLmsBaseController;
 use EscolaLms\Files\Http\Services\Contracts\FileServiceContract;
+use Illuminate\Http\File;
 use Illuminate\Http\JsonResponse;
 
 class FileApiController extends EscolaLmsBaseController implements FileApiSwagger
@@ -49,9 +51,11 @@ class FileApiController extends EscolaLmsBaseController implements FileApiSwagge
 
     public function list(FileListingRequest $request): JsonResponse
     {
-        return new JsonResponse([
-            'success' => true
-        ], 200);
+        $list = [
+            ['name'=>'test.png', 'created_at'=>date(DATE_RFC3339),'mime'=>'image/png', 'url'=>'/test.png'],
+            ['name'=>'test.json', 'created_at'=>date(DATE_RFC3339),'mime'=>'application/json', 'url'=>'/test.json'],
+        ];
+        return new JsonResponse($list, 200);
     }
 
     public function move(FileMoveRequest $request): JsonResponse
