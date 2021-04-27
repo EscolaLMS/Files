@@ -12,6 +12,9 @@ if (file_exists(__DIR__.'/../../oa_version.php')) {
     require __DIR__.'/../../oa_version.php';
 }
 
+/**
+ * SWAGGER_VERSION
+ */
 interface FileApiSwagger
 {
     /**
