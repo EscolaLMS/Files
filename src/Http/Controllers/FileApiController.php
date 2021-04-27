@@ -48,7 +48,7 @@ class FileApiController extends EscolaLmsBaseController implements FileApiSwagge
         } catch (\Exception $exception) {
             return new JsonResponse([
                 'message' => $exception->getMessage(),
-            ], 500);
+            ], 422);
         }
     }
 

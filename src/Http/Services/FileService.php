@@ -15,7 +15,7 @@ class FileService implements FileServiceContract
         $this->disk = 'files';
     }
 
-    function findAll(string $directory, array $list)
+    public function findAll(string $directory, array $list)
     {
         $ret = [];
         /** @var UploadedFile $file */
@@ -29,7 +29,7 @@ class FileService implements FileServiceContract
         return $ret;
     }
 
-    function putAll(string $directory, array $list)
+    public function putAll(string $directory, array $list)
     {
         /** @var UploadedFile $file */
         foreach ($list as $file) {

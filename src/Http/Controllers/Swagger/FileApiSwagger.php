@@ -125,7 +125,7 @@ interface FileApiSwagger
      *          description="one of the uploaded files already exists",
      *      ),
      *     @OA\Response(
-     *          response=500,
+     *          response=422,
      *          description="server-side error",
      *      ),
      * )

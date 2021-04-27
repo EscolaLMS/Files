@@ -9,16 +9,9 @@ use Illuminate\Support\ServiceProvider;
 
 class EscolaLmsFilesServiceProvider extends ServiceProvider
 {
-    use Injectable;
-
-    private const CONTRACTS = [
+    public array $singletons = [
         FileServiceContract::class => FileService::class,
     ];
-
-    public function register()
-    {
-        $this->injectContract(self::CONTRACTS);
-    }
 
     public function boot()
     {

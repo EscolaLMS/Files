@@ -103,7 +103,7 @@ class FilesApiTest extends TestCase
                 'target' => $target,
             ],
         );
-        $response->assertStatus(500);
+        $response->assertStatus(422);
         Storage::assertMissing($file->getClientOriginalName());
     }
 }
