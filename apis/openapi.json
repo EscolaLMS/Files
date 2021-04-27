@@ -1,0 +1,215 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "EscolaLMS",
+        "version": "0.0.1"
+    },
+    "paths": {
+        "/api/file/list": {
+            "get": {
+                "summary": "Lists files prefixed by given directory name",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "directory"
+                                ],
+                                "properties": {
+                                    "directory": {
+                                        "type": "string",
+                                        "default": "/"
+                                    },
+                                    "from": {
+                                        "type": "string",
+                                        "default": "."
+                                    },
+                                    "count": {
+                                        "type": "uint",
+                                        "default": "50"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "datetime"
+                                            },
+                                            "mime": {
+                                                "type": "string",
+                                                "format": "mime"
+                                            },
+                                            "url": {
+                                                "type": "string",
+                                                "format": "url"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "endpoint requires authentication"
+                    },
+                    "403": {
+                        "description": "user doesn't have required access rights"
+                    },
+                    "500": {
+                        "description": "server-side error"
+                    }
+                }
+            }
+        },
+        "/api/file/upload": {
+            "post": {
+                "summary": "Upload files using multipart form-data",
+                "operationId": "EscolaLms\\Files\\Http\\Controllers\\Swagger\\FileApiSwagger::upload",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "file[]",
+                                    "target"
+                                ],
+                                "properties": {
+                                    "file[]": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "target": {
+                                        "type": "string",
+                                        "default": "/"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "endpoint requires authentication"
+                    },
+                    "403": {
+                        "description": "user doesn't have required access rights"
+                    },
+                    "409": {
+                        "description": "one of the uploaded files already exists"
+                    },
+                    "422": {
+                        "description": "server-side error"
+                    }
+                }
+            }
+        },
+        "/api/file/move": {
+            "post": {
+                "summary": "Move the file from one path to another",
+                "operationId": "EscolaLms\\Files\\Http\\Controllers\\Swagger\\FileApiSwagger::move",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "source",
+                                    "destination"
+                                ],
+                                "properties": {
+                                    "source": {
+                                        "type": "string"
+                                    },
+                                    "destination": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "302": {
+                        "description": "invalid request"
+                    },
+                    "401": {
+                        "description": "endpoint requires authentication"
+                    },
+                    "403": {
+                        "description": "user doesn't have required access rights"
+                    },
+                    "500": {
+                        "description": "server-side error"
+                    }
+                }
+            }
+        },
+        "/api/file/delete": {
+            "delete": {
+                "summary": "Delete given file",
+                "operationId": "EscolaLms\\Files\\Http\\Controllers\\Swagger\\FileApiSwagger::delete",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "file"
+                                ],
+                                "properties": {
+                                    "file": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "401": {
+                        "description": "endpoint requires authentication"
+                    },
+                    "403": {
+                        "description": "user doesn't have required access rights"
+                    },
+                    "500": {
+                        "description": "server-side error"
+                    }
+                }
+            }
+        }
+    }
+}
