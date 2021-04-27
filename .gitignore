@@ -1,0 +1,5 @@
+vendor/
+tags
+.phpunit.result.cache
+.idea/
+src/oa_version.php
