@@ -2,6 +2,7 @@
 
 namespace EscolaLms\Files\Http\Services;
 
+use EscolaLms\Files\Http\Exceptions\PutAllException;
 use EscolaLms\Files\Http\Services\Contracts\FileServiceContract;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -35,7 +36,7 @@ class FileService implements FileServiceContract
         foreach ($list as $file) {
             if( Storage::putFileAs($directory,$file, $file->getClientOriginalName()) == false )
             {
-                throw new \Exception(sprintf('Cannot put file %s to %s', $file->getClientOriginalName(), $directory ));
+                throw new PutAllException($file->getClientOriginalName(),$directory);
             }
         }
     }
