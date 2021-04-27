@@ -8,9 +8,10 @@ use EscolaLms\Files\Http\Requests\FileMoveRequest;
 use EscolaLms\Files\Http\Requests\FileUploadRequest;
 use Illuminate\Http\JsonResponse;
 
-/**
- * @OA\Info(title="Files API", version="1.0.0-dev")
- */
+if (file_exists(__DIR__.'/../../oa_version.php')) {
+    require __DIR__.'/../../oa_version.php';
+}
+
 interface FileApiSwagger
 {
     /**
