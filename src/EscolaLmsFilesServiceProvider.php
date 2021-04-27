@@ -11,14 +11,9 @@ class EscolaLmsFilesServiceProvider extends ServiceProvider
 {
     use Injectable;
 
-    private const CONTRACTS = [
-        FileServiceContract::class => FileService::class,
+    public $singletons = [
+        FileServiceContract::class => FileService::class
     ];
-
-    public function register()
-    {
-        $this->injectContract(self::CONTRACTS);
-    }
 
     public function boot()
     {
