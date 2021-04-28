@@ -8,21 +8,49 @@ use Illuminate\Support\Facades\Storage;
 
 class FilesApiListTest extends TestCase
 {
-    public function testMainDirectoryList()
+    private string $url = '/api/file/list';
+
+    public function testDirectoryList()
     {
-        $directory = '/';
         $file1 = UploadedFile::fake()->image('test.png');
+        $file2 = UploadedFile::fake()->create('test.txt', 3, 'text/plain');
+
+        $directory = '/';
         Storage::putFile($directory,$file1);
+        Storage::putFile($directory,$file2);
+
         $response = $this->get(
-            '/api/file/list',
+            $this->url,
             [
                 'directory' => $directory,
             ],
         );
         $response->assertOk();
         $response->assertJson([
-            ['name'=>'test.png', 'created_at'=>date(DATE_RFC3339),'mime'=>'image/png', 'url'=>'/test.png'],
-            ['name'=>'test.json', 'created_at'=>date(DATE_RFC3339),'mime'=>'application/json', 'url'=>'/test.json'],
+            [
+                'name' => $file1->getClientOriginalName(),
+                'created_at' => date(DATE_RFC3339, $file1->getCTime()),
+                'mime' => $file1->getMimeType(),
+                'url' => rtrim($directory,'/').'/'.$file1->getClientOriginalName(),
+            ],
+            [
+                'name' => $file2->getClientOriginalName(),
+                'created_at' => date(DATE_RFC3339),
+                'mime' => 'application/json',
+                'url' => rtrim($directory,'/').'/'.$file2->getClientOriginalName(),
+            ],
         ]);
+    }
+
+    public function testDirectoryListInvalidCount()
+    {
+        $response = $this->get(
+            $this->url,
+            [
+                'directory' => '/',
+                'count' => -1
+            ]
+        );
+        $response->assertStatus(302);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace EscolaLms\Files\Http\Requests;
 
+use EscolaLms\Files\Http\Exceptions\Handler;
 use Illuminate\Foundation\Http\FormRequest;
 
 class FileListingRequest extends FormRequest
@@ -21,7 +22,20 @@ class FileListingRequest extends FormRequest
      */
     public function rules()
     {
+//        debug_print_backtrace();
         return [
+//            'directory' => 'required',
+//            'from' => 'nullable|string|min:1',
+//            'count' => 'nullable|integer|min:0',
         ];
+    }
+
+    public function getAcceptableContentTypes()
+    {
+        return ['application/json'];
+    }
+
+    protected function getValidatorInstance() {
+        return parent::getValidatorInstance();
     }
 }

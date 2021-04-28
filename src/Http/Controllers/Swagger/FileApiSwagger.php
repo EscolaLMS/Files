@@ -71,6 +71,10 @@ interface FileApiSwagger
      *          description="endpoint requires authentication",
      *     ),
      *     @OA\Response(
+     *          response=302,
+     *          description="request contains invalid parameters",
+     *     ),
+     *     @OA\Response(
      *          response=403,
      *          description="user doesn't have required access rights",
      *      ),
