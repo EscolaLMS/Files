@@ -20,7 +20,7 @@ class FilesApiUploadTest extends TestCase
             ],
         );
         $response->assertStatus(200);
-        Storage::assertExists($file->getClientOriginalName());
+        $this->disk->assertExists($file->getClientOriginalName());
     }
 
     public function testSingleFileUploadInvalidContentType()
@@ -36,7 +36,7 @@ class FilesApiUploadTest extends TestCase
             ['Content-Type'=>'application/json'],
         );
         $response->assertStatus(302);
-        Storage::assertMissing($file->getClientOriginalName());
+        $this->disk->assertMissing($file->getClientOriginalName());
     }
 
     public function testSingleFileUploadMissingTarget()
@@ -75,7 +75,7 @@ class FilesApiUploadTest extends TestCase
             ],
         );
         $response->assertStatus(200);
-        Storage::assertExists($file->getClientOriginalName());
+        $this->disk->assertExists($file->getClientOriginalName());
 
         $file = UploadedFile::fake()->image('duplicate');
         $response = $this->post(
@@ -86,7 +86,7 @@ class FilesApiUploadTest extends TestCase
             ],
         );
         $response->assertStatus(409);
-        Storage::assertExists($file->getClientOriginalName());
+        $this->disk->assertExists($file->getClientOriginalName());
     }
 
     /**
@@ -104,6 +104,6 @@ class FilesApiUploadTest extends TestCase
             ],
         );
         $response->assertStatus(500);
-        Storage::assertMissing($file->getClientOriginalName());
+        $this->disk->assertMissing($file->getClientOriginalName());
     }
 }

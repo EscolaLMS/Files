@@ -4,40 +4,58 @@ namespace EscolaLms\Files\Http\Services;
 
 use EscolaLms\Files\Http\Exceptions\PutAllException;
 use EscolaLms\Files\Http\Services\Contracts\FileServiceContract;
+use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Collection;
 
 class FileService implements FileServiceContract
 {
-    private string $disk;
+    private FilesystemAdapter $disk;
 
-    public function __construct()
+    public function __construct(FilesystemManager $manager)
     {
-        $this->disk = 'files';
+        $this->disk = $manager->disk('files');
     }
 
-    public function findAll(string $directory, array $list)
+    public function findAll(string $directory, array $list): array
     {
         $ret = [];
         /** @var UploadedFile $file */
         foreach ($list as $file) {
             $name = $file->getClientOriginalName();
             $path = $directory.'/'.$name;
-            if (Storage::exists($path)) {
+
+            if ($this->disk->exists($path)) {
                 $ret []= $path;
             }
         }
         return $ret;
     }
 
-    public function putAll(string $directory, array $list)
+    public function putAll(string $directory, array $list): void
     {
         /** @var UploadedFile $file */
         foreach ($list as $file) {
-            if( Storage::putFileAs($directory,$file, $file->getClientOriginalName()) == false )
+            if( $this->disk->putFileAs($directory,$file, $file->getClientOriginalName()) == false )
             {
                 throw new PutAllException($file->getClientOriginalName(),$directory);
             }
         }
+    }
+
+    public function listInfo(string $directory): Collection
+    {
+        return collect($this->disk->files($directory))
+            ->map(function(string $path){
+                return [
+                    'name' => basename($path),
+                    'created_at' => date(DATE_RFC3339,$this->disk->getTimestamp($path)),
+                    'mime' => $this->disk->mimeType($path),
+                    'url' => $this->disk->url($path),
+
+                ];
+            }
+        );
     }
 }

@@ -22,11 +22,10 @@ class FileListingRequest extends FormRequest
      */
     public function rules()
     {
-//        debug_print_backtrace();
         return [
-//            'directory' => 'required',
-//            'from' => 'nullable|string|min:1',
-//            'count' => 'nullable|integer|min:0',
+            'directory' => 'required',
+            'from' => 'nullable|string|min:1',
+            'count' => 'nullable|integer|min:0',
         ];
     }
 
