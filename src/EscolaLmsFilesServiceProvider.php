@@ -22,6 +22,9 @@ class EscolaLmsFilesServiceProvider extends ServiceProvider
             'url'=>env('APP_URL').'/files',
             'visibility'=>'public',
         ];
+        app()->config['filesystems.links'] = [
+            public_path('files') => storage_path('files/public'),
+        ];
         parent::register();
     }
 
