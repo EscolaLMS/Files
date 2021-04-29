@@ -2,7 +2,6 @@
 
 namespace EscolaLms\Files\Http\Services\Contracts;
 
-use Exception;
 use Illuminate\Support\Collection;
 
 interface FileServiceContract

@@ -25,15 +25,15 @@ class Handler extends \Illuminate\Foundation\Exceptions\Handler
                 'message' => $exception->getMessage(),
             ], 422);
         }
+        elseif ($exception instanceof DirectoryOutsideOfRootException)
+        {
+            return new JsonResponse([
+                'message' => $exception->getMessage(),
+            ], 405);
+        }
         else
         {
             return parent::render($request, $exception);
         }
-    }
-
-    public function report(Throwable $e)
-    {
-//        dd($e->getMessage());
-        return parent::report($e);
     }
 }

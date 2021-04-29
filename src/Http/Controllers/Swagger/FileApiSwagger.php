@@ -30,29 +30,21 @@ interface FileApiSwagger
      *         )
      *     ),
      *     @OA\Parameter(
-     *         name="from",
+     *         name="page",
      *         in="query",
      *         @OA\Schema(
-     *             type="string",
-     *             default=".",
+     *             type="int",
+     *             default="1",
      *         )
      *     ),
      *     @OA\Parameter(
-     *         name="count",
+     *         name="perPage",
      *         in="query",
      *         @OA\Schema(
      *             type="int",
      *             default="50",
      *         )
      *     ),
-     *     @OA\Parameter(
-     *          name="directory",
-     *          in="query",
-     *          @OA\Schema(
-     *              type="string",
-     *              default="/",
-     *          )
-     *      ),
      *     @OA\Response(
      *          response=200,
      *          description="successful operation",
@@ -96,6 +88,10 @@ interface FileApiSwagger
      *     @OA\Response(
      *          response=403,
      *          description="user doesn't have required access rights",
+     *      ),
+     *     @OA\Response(
+     *          response=405,
+     *          description="Target directory access is not allowed",
      *      ),
      *     @OA\Response(
      *          response=500,

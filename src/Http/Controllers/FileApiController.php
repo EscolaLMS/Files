@@ -10,7 +10,6 @@ use EscolaLms\Files\Http\Requests\FileUploadRequest;
 use EscolaLms\Core\Http\Controllers\EscolaLmsBaseController;
 use EscolaLms\Files\Http\Services\Contracts\FileServiceContract;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\UploadedFile;
 
 class FileApiController extends EscolaLmsBaseController implements FileApiSwagger
 {
@@ -50,8 +49,9 @@ class FileApiController extends EscolaLmsBaseController implements FileApiSwagge
 
     public function list(FileListingRequest $request): JsonResponse
     {
-        $directory = $request->get('directory');
-        $info = $this->service->listInfo($directory);
+        $info = $this->service->listInfo($request->getDirectory())
+            ->forPage($request->getPage(), $request->getPerPage())
+        ;
         return new JsonResponse($info, 200);
     }
 

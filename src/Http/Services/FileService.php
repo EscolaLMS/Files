@@ -2,6 +2,7 @@
 
 namespace EscolaLms\Files\Http\Services;
 
+use EscolaLms\Files\Http\Exceptions\DirectoryOutsideOfRootException;
 use EscolaLms\Files\Http\Exceptions\PutAllException;
 use EscolaLms\Files\Http\Services\Contracts\FileServiceContract;
 use Illuminate\Filesystem\FilesystemAdapter;
@@ -46,16 +47,22 @@ class FileService implements FileServiceContract
 
     public function listInfo(string $directory): Collection
     {
-        return collect($this->disk->files($directory))
-            ->map(function(string $path){
-                return [
-                    'name' => basename($path),
-                    'created_at' => date(DATE_RFC3339,$this->disk->getTimestamp($path)),
-                    'mime' => $this->disk->mimeType($path),
-                    'url' => $this->disk->url($path),
+        try {
+            return collect($this->disk->files($directory))
+                ->map(function (string $path) {
+                    return [
+                        'name' => basename($path),
+                        'created_at' => date(DATE_RFC3339, $this->disk->getTimestamp($path)),
+                        'mime' => $this->disk->mimeType($path),
+                        'url' => $this->disk->url($path),
 
-                ];
-            }
-        );
+                    ];
+                }
+                );
+        }
+        catch( \LogicException $exception)
+        {
+            throw new DirectoryOutsideOfRootException($directory);
+        }
     }
 }
