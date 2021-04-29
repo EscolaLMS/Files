@@ -35,7 +35,7 @@ class FilesApiListTest extends TestCase
             ],
             [
                 'name' => $file2->getClientOriginalName(),
-                'created_at' => date(DATE_RFC3339),
+                'created_at' => date(DATE_RFC3339, $file2->getCTime()),
                 'mime' => $file2->getMimeType(),
                 'url' => $path.'/'.$file2->getClientOriginalName(),
             ],
@@ -69,7 +69,7 @@ class FilesApiListTest extends TestCase
             ],
             [
                 'name' => $file2->getClientOriginalName(),
-                'created_at' => date(DATE_RFC3339),
+                'created_at' => date(DATE_RFC3339, $file2->getCTime()),
                 'mime' => $file2->getMimeType(),
                 'url' => $path.'/'.$file2->getClientOriginalName(),
             ],
