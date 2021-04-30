@@ -2,6 +2,7 @@
 
 namespace EscolaLms\Files\Http\Requests;
 
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class FileMoveRequest extends FormRequest
@@ -9,9 +10,11 @@ class FileMoveRequest extends FormRequest
     /**
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return true;
+        /** @var User $user */
+        $user = $this->user();
+        return $user!=null && $user->can('move:files');
     }
 
     /**
@@ -19,7 +22,7 @@ class FileMoveRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
         ];

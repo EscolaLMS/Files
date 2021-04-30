@@ -49,7 +49,6 @@ class FileApiController extends EscolaLmsBaseController implements FileApiSwagge
 
     public function list(FileListingRequest $request): JsonResponse
     {
-//        $list = $this->service->list();
         $list = [
             ['name'=>'test.png', 'created_at'=>date(DATE_RFC3339),'mime'=>'image/png', 'url'=>'/test.png'],
             ['name'=>'test.json', 'created_at'=>date(DATE_RFC3339),'mime'=>'application/json', 'url'=>'/test.json'],

@@ -2,7 +2,8 @@
 
 namespace EscolaLms\Files\Http\Requests;
 
-use EscolaLms\Files\Http\Exceptions\Handler;
+use EscolaLms\Files\Http\Controllers\FileApiController;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class FileListingRequest extends FormRequest
@@ -10,9 +11,11 @@ class FileListingRequest extends FormRequest
     /**
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return true;
+        /** @var User $user */
+        $user = $this->user();
+        return $user!=null && $user->can('list:files', FileApiController::class);
     }
 
     /**
@@ -20,22 +23,17 @@ class FileListingRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
-//        debug_print_backtrace();
         return [
-//            'directory' => 'required',
-//            'from' => 'nullable|string|min:1',
-//            'count' => 'nullable|integer|min:0',
+            'directory' => 'required',
+            'from' => 'nullable|string|min:1',
+            'count' => 'nullable|integer|min:0',
         ];
     }
 
-    public function getAcceptableContentTypes()
+    public function getAcceptableContentTypes(): array
     {
         return ['application/json'];
-    }
-
-    protected function getValidatorInstance() {
-        return parent::getValidatorInstance();
     }
 }

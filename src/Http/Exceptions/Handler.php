@@ -33,7 +33,6 @@ class Handler extends \Illuminate\Foundation\Exceptions\Handler
 
     public function report(Throwable $e)
     {
-//        dd($e->getMessage());
         return parent::report($e);
     }
 }
