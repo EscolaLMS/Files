@@ -15,7 +15,7 @@ class FileListingRequest extends FormRequest
     {
         /** @var User $user */
         $user = $this->user();
-        return $user!=null && $user->can('list:files', FileApiController::class);
+        return $user!=null && $user->can('list:files');
     }
 
     /**

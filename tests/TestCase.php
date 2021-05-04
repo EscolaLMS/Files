@@ -2,11 +2,10 @@
 
 namespace EscolaLms\Files\Tests;
 
+use EscolaLms\Core\Models\User;
 use EscolaLms\Files\EscolaLmsFilesServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Orchestra\Testbench\Factories\UserFactory;
-use Spatie\Permission\Models\Permission;
 
 class TestCase extends \EscolaLms\Core\Tests\TestCase
 {
@@ -15,12 +14,7 @@ class TestCase extends \EscolaLms\Core\Tests\TestCase
         parent::setUp();
         Storage::fake();
 
-        Permission::create(['name'=>'list:files']);
-        Permission::create(['name'=>'edit:files']);
-        Permission::create(['name'=>'move:files']);
-        Permission::create(['name'=>'delete:files']);
-
-        $user = UserFactory::new()->create();
+        $user = User::factory()->create();
         $user->givePermissionTo(
             "list:files",
             "edit:files",
@@ -33,5 +27,10 @@ class TestCase extends \EscolaLms\Core\Tests\TestCase
     protected function getPackageProviders($app): array
     {
         return [EscolaLmsFilesServiceProvider::class];
+    }
+
+    public function ignorePackageDiscoveriesFrom()
+    {
+        return [];
     }
 }

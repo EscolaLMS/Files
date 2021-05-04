@@ -1,5 +1,5 @@
 bash:
-	- cd .. && docker-compose exec escola_lms_app bash -c "cd ../package"
+	- cd .. && docker-compose exec escola_lms_app bash
 test:
 	- cd .. && docker-compose exec escola_lms_app bash -c "cd ../package && phpunit"
 test-log:
