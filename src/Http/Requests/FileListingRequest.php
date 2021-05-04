@@ -11,7 +11,7 @@ class FileListingRequest extends FormRequest
     /**
      * @return bool
      */
-    public function authorize(): bool
+    public function authorize()
     {
         /** @var User $user */
         $user = $this->user();
@@ -23,17 +23,12 @@ class FileListingRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(): array
+    public function rules()
     {
         return [
             'directory' => 'required',
             'from' => 'nullable|string|min:1',
             'count' => 'nullable|integer|min:0',
         ];
-    }
-
-    public function getAcceptableContentTypes(): array
-    {
-        return ['application/json'];
     }
 }

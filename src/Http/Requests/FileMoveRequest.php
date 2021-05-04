@@ -10,7 +10,7 @@ class FileMoveRequest extends FormRequest
     /**
      * @return bool
      */
-    public function authorize(): bool
+    public function authorize()
     {
         /** @var User $user */
         $user = $this->user();
@@ -22,7 +22,7 @@ class FileMoveRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(): array
+    public function rules()
     {
         return [
         ];
