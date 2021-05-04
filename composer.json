@@ -2,7 +2,6 @@
   "name": "escolalms/files",
   "description": "Escola file repository API.",
   "type": "package",
-  "version": "dev-master",
   "require": {
     "php": ">=7.4",
     "laravel/framework": ">=8.0",
