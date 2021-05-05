@@ -2,6 +2,8 @@
 namespace EscolaLms\Files\Http\Exceptions;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class Handler extends \Illuminate\Foundation\Exceptions\Handler
@@ -9,11 +11,11 @@ class Handler extends \Illuminate\Foundation\Exceptions\Handler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Throwable  $e
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Request $request
+     * @param Throwable $exception
+     * @return Response
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function render($request, Throwable $exception)
     {
@@ -22,6 +24,12 @@ class Handler extends \Illuminate\Foundation\Exceptions\Handler
             return new JsonResponse([
                 'message' => $exception->getMessage(),
             ], 422);
+        }
+        elseif ($exception instanceof DirectoryOutsideOfRootException)
+        {
+            return new JsonResponse([
+                'message' => $exception->getMessage(),
+            ], 405);
         }
         else
         {

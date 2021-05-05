@@ -21,17 +21,28 @@ interface FileApiSwagger
      * @OA\Get(
      *     path="/api/file/list",
      *     summary="Lists files prefixed by given directory name",
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\MediaType(
-     *            mediaType="application/json",
-     *            @OA\Schema(
-     *                type="object",
-     *                required={"directory"},
-     *                @OA\Property(property="directory", type="string", default="/"),
-     *                @OA\Property(property="from", type="string", default="."),
-     *                @OA\Property(property="count", type="uint", default="50"),
-     *            )
+     *     @OA\Parameter(
+     *         name="directory",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *             default="/",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="int",
+     *             default="1",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="perPage",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="int",
+     *             default="50",
      *         )
      *     ),
      *     @OA\Response(
@@ -71,8 +82,16 @@ interface FileApiSwagger
      *          description="endpoint requires authentication",
      *     ),
      *     @OA\Response(
+     *          response=302,
+     *          description="request contains invalid parameters",
+     *     ),
+     *     @OA\Response(
      *          response=403,
      *          description="user doesn't have required access rights",
+     *      ),
+     *     @OA\Response(
+     *          response=405,
+     *          description="Target directory access is not allowed",
      *      ),
      *     @OA\Response(
      *          response=500,
