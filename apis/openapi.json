@@ -7,6 +7,9 @@
     "paths": {
         "/api/file/list": {
             "get": {
+                "tags": [
+                    "Files"
+                ],
                 "summary": "Lists files prefixed by given directory name",
                 "parameters": [
                     {
@@ -85,6 +88,9 @@
         },
         "/api/file/upload": {
             "post": {
+                "tags": [
+                    "Files"
+                ],
                 "summary": "Upload files using multipart form-data",
                 "operationId": "EscolaLms\\Files\\Http\\Controllers\\Swagger\\FileApiSwagger::upload",
                 "requestBody": {
@@ -135,6 +141,9 @@
         },
         "/api/file/move": {
             "post": {
+                "tags": [
+                    "Files"
+                ],
                 "summary": "Move the file from one path to another",
                 "operationId": "EscolaLms\\Files\\Http\\Controllers\\Swagger\\FileApiSwagger::move",
                 "requestBody": {
@@ -180,6 +189,9 @@
         },
         "/api/file/delete": {
             "delete": {
+                "tags": [
+                    "Files"
+                ],
                 "summary": "Delete given file",
                 "operationId": "EscolaLms\\Files\\Http\\Controllers\\Swagger\\FileApiSwagger::delete",
                 "requestBody": {
