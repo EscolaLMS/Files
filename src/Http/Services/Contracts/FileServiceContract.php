@@ -11,4 +11,6 @@ interface FileServiceContract
     public function putAll(string $directory, array $list): void;
 
     public function listInfo(string $directory): Collection;
+
+    public function move(string $sourceUrl, string $destinationUrl): void;
 }

@@ -3,6 +3,7 @@
 namespace EscolaLms\Files\Http\Services;
 
 use EscolaLms\Files\Http\Exceptions\DirectoryOutsideOfRootException;
+use EscolaLms\Files\Http\Exceptions\MoveException;
 use EscolaLms\Files\Http\Exceptions\PutAllException;
 use EscolaLms\Files\Http\Services\Contracts\FileServiceContract;
 use Illuminate\Filesystem\FilesystemAdapter;
@@ -34,6 +35,11 @@ class FileService implements FileServiceContract
         return $ret;
     }
 
+    /**
+     * @param string $directory
+     * @param array $list
+     * @throws PutAllException
+     */
     public function putAll(string $directory, array $list): void
     {
         /** @var UploadedFile $file */
@@ -45,6 +51,10 @@ class FileService implements FileServiceContract
         }
     }
 
+    /**
+     * @param string $directory
+     * @return Collection
+     */
     public function listInfo(string $directory): Collection
     {
         try {
@@ -64,5 +74,35 @@ class FileService implements FileServiceContract
         {
             throw new DirectoryOutsideOfRootException($directory);
         }
+    }
+
+    /**
+     * @param string $sourceUrl
+     * @param string $destinationUrl
+     * @throws MoveException
+     * @throws \League\Flysystem\FileExistsException
+     * @throws \League\Flysystem\FileNotFoundException
+     */
+    public function move(string $sourceUrl, string $destinationUrl): void
+    {
+        try {
+            $ret = $this->disk->rename($this->urlToPath($sourceUrl), $this->urlToPath($destinationUrl));
+            if (!$ret) {
+                throw new MoveException($sourceUrl, $destinationUrl);
+            }
+        } catch (\League\Flysystem\FileNotFoundException $exception) {
+            throw new MoveException($sourceUrl, $destinationUrl);
+        }
+    }
+
+    private function urlToPath(string $url): string
+    {
+        $prefix = $this->disk->url('');
+        if (substr($url,0,strlen($prefix)) === $prefix) {
+            $path = substr($url,strlen($prefix));
+        } else {
+            $path = $url;
+        }
+        return $path;
     }
 }
