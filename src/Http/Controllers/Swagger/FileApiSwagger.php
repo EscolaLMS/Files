@@ -205,20 +205,21 @@ interface FileApiSwagger
      * @OA\Delete(
      *     path="/api/file/delete",
      *     summary="Delete given file",
-     *     @OA\RequestBody(
+     *     @OA\Parameter(
+     *         name="url",
+     *         in="query",
      *         required=true,
-     *         @OA\MediaType(
-     *            mediaType="multipart/form-data",
-     *            @OA\Schema(
-     *                type="object",
-     *                required={"file"},
-     *                @OA\Property(property="file", type="string"),
-     *            )
+     *         @OA\Schema(
+     *             type="string",
      *         )
      *     ),
      *     @OA\Response(
      *          response=200,
      *          description="successful operation",
+     *      ),
+     *     @OA\Response(
+     *          response=400,
+     *          description="file doesn't exists",
      *      ),
      *     @OA\Response(
      *          response=401,
@@ -227,6 +228,10 @@ interface FileApiSwagger
      *     @OA\Response(
      *          response=403,
      *          description="user doesn't have required access rights",
+     *      ),
+     *     @OA\Response(
+     *          response=405,
+     *          description="specified file is out of bounds of the allowed paths",
      *      ),
      *     @OA\Response(
      *          response=500,

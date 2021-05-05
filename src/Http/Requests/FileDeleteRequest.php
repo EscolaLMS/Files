@@ -22,6 +22,17 @@ class FileDeleteRequest extends FormRequest
     public function rules()
     {
         return [
+            'url' => ['required','string'],
         ];
+    }
+
+    public function getAcceptableContentTypes()
+    {
+        return ['multipart/form-data'];
+    }
+
+    public function getParamUrl(): string
+    {
+        return $this->get('url');
     }
 }

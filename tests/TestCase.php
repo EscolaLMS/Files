@@ -31,4 +31,14 @@ class TestCase extends \EscolaLms\Core\Tests\TestCase
         }
         return $this->get($query, $headers);
     }
+
+    protected function deleteWithQuery(string $url, array $parameters, array $headers = []): TestResponse
+    {
+        if (empty($parameters)) {
+            $query = $url;
+        } else {
+            $query = $url.'?'.http_build_query($parameters);
+        }
+        return $this->delete($query, $headers);
+    }
 }
