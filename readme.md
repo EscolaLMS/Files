@@ -1,4 +1,8 @@
-# Installation
+# Files 
+
+Reusage files API 
+
+## Installation
 In case running as a standalone package you need to insert swagger annotation for documentation to work.
 To achieve that, create `src/oa_version.php` file with the following contents:
 ```php
