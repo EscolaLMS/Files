@@ -21,6 +21,7 @@ interface FileApiSwagger
      * @OA\Get(
      *     path="/api/file/list",
      *     summary="Lists files prefixed by given directory name",
+     *     tags={"Files"},
      *     @OA\Parameter(
      *         name="directory",
      *         in="query",
@@ -108,6 +109,7 @@ interface FileApiSwagger
      * @OA\Post(
      *     path="/api/file/upload",
      *     summary="Upload files using multipart form-data",
+     *     tags={"Files"},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\MediaType(
@@ -162,6 +164,7 @@ interface FileApiSwagger
      * @OA\Post(
      *     path="/api/file/move",
      *     summary="Move the file from one path to another",
+     *     tags={"Files"},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\MediaType(
@@ -205,6 +208,7 @@ interface FileApiSwagger
      * @OA\Delete(
      *     path="/api/file/delete",
      *     summary="Delete given file",
+     *     tags={"Files"},
      *     @OA\Parameter(
      *         name="url",
      *         in="query",

@@ -2,7 +2,6 @@
 
 namespace EscolaLms\Files\Http\Requests;
 
-use EscolaLms\Files\Http\Exceptions\Handler;
 use Illuminate\Foundation\Http\FormRequest;
 
 class FileListingRequest extends FormRequest
@@ -36,14 +35,12 @@ class FileListingRequest extends FormRequest
 
     public function getPage(): int
     {
-        $page = $this->get('page');
-        return $page == null ? 1 : $page;
+        return $this->get('page', 1);
     }
 
     public function getPerPage(): int
     {
-        $perPage = $this->get('perPage');
-        return $perPage == null ? 50 : $perPage;
+        return $this->get('perPage', 50);
     }
 
     public function getAcceptableContentTypes()
