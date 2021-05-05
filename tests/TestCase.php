@@ -4,21 +4,25 @@ namespace EscolaLms\Files\Tests;
 
 use EscolaLms\Core\Models\User;
 use EscolaLms\Files\EscolaLmsFilesServiceProvider;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use EscolaLms\Files\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Testing\TestResponse;
 use Laravel\Passport\PassportServiceProvider;
 use Spatie\Permission\PermissionServiceProvider;
 
 class TestCase extends \EscolaLms\Core\Tests\TestCase
 {
+    protected Filesystem $disk;
+
     use RefreshDatabase;
 
     protected function setUp(): void
     {
         parent::setUp();
-        Storage::fake();
+        $this->disk = Storage::fake('files');
 
         $user = User::factory()->create();
         $user->givePermissionTo(
@@ -59,5 +63,15 @@ class TestCase extends \EscolaLms\Core\Tests\TestCase
     protected function seeder()
     {
         return DatabaseSeeder::class;
+    }
+
+    protected function getWithQuery(string $url, array $parameters, array $headers = []): TestResponse
+    {
+        if (empty($parameters)) {
+            $query = $url;
+        } else {
+            $query = $url.'?'.http_build_query($parameters);
+        }
+        return $this->get($query, $headers);
     }
 }

@@ -14,12 +14,22 @@ class EscolaLmsFilesServiceProvider extends ServiceProvider
         FileServiceContract::class => FileService::class,
     ];
 
+    public function register()
+    {
+        app()->config['filesystems.disks.files'] = [
+            'driver'=>'local',
+            'root'=>storage_path('/files/public'),
+            'url'=>env('APP_URL').'/files',
+            'visibility'=>'public',
+        ];
+        app()->config['filesystems.links'] = [
+            public_path('files') => storage_path('files/public'),
+        ];
+        parent::register();
+    }
+
     public function boot()
     {
-        $this->mergeConfigFrom(
-            __DIR__.'/../config/filesystems.php',
-            'filesystems'
-        );
         $this->app->bind(
             ExceptionHandler::class,Handler::class,
         );

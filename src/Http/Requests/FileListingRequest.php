@@ -26,8 +26,30 @@ class FileListingRequest extends FormRequest
     {
         return [
             'directory' => 'required',
-            'from' => 'nullable|string|min:1',
-            'count' => 'nullable|integer|min:0',
+            'page' => 'nullable|integer|min:1',
+            'perPage' => 'nullable|integer|min:0',
         ];
+    }
+
+    public function getDirectory(): string
+    {
+        return $this->get('directory');
+    }
+
+    public function getPage(): int
+    {
+        $page = $this->get('page');
+        return $page == null ? 1 : $page;
+    }
+
+    public function getPerPage(): int
+    {
+        $perPage = $this->get('perPage');
+        return $perPage == null ? 50 : $perPage;
+    }
+
+    public function getAcceptableContentTypes()
+    {
+        return ['application/json'];
     }
 }
