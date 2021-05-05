@@ -10,9 +10,9 @@ class PermissionTableSeeder extends Seeder
     public function run()
     {
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
-        Permission::create(['name'=>'list:files']);
-        Permission::create(['name'=>'edit:files']);
-        Permission::create(['name'=>'move:files']);
-        Permission::create(['name'=>'delete:files']);
+        Permission::create(['name'=>'list:files', 'guard_name'=>'web']);
+        Permission::create(['name'=>'edit:files', 'guard_name'=>'web']);
+        Permission::create(['name'=>'move:files', 'guard_name'=>'web']);
+        Permission::create(['name'=>'delete:files', 'guard_name'=>'web']);
     }
 }

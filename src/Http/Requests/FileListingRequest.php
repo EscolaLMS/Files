@@ -2,7 +2,6 @@
 
 namespace EscolaLms\Files\Http\Requests;
 
-use EscolaLms\Files\Http\Controllers\FileApiController;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Foundation\Http\FormRequest;
 
