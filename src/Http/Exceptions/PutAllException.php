@@ -4,9 +4,11 @@
 namespace EscolaLms\Files\Http\Exceptions;
 
 
-use Throwable;
+use EscolaLms\Files\Http\Exceptions\Contracts\Renderable;
+use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
-class PutAllException extends \Exception
+class PutAllException extends \Exception implements Renderable
 {
     /**
      * PutAllException constructor.
@@ -16,5 +18,15 @@ class PutAllException extends \Exception
     public function __construct(string $filename, string $directory)
     {
         parent::__construct(sprintf('Cannot put file %s to %s', $filename, $directory));
+    }
+
+    /**
+     * @return Response
+     */
+    function render(): Response
+    {
+        return new JsonResponse([
+            'message' => $this->getMessage(),
+        ], 422);
     }
 }
