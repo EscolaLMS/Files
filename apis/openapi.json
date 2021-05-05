@@ -194,33 +194,31 @@
                 ],
                 "summary": "Delete given file",
                 "operationId": "EscolaLms\\Files\\Http\\Controllers\\Swagger\\FileApiSwagger::delete",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "required": [
-                                    "file"
-                                ],
-                                "properties": {
-                                    "file": {
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
-                            }
+                "parameters": [
+                    {
+                        "name": "url",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
                         }
                     }
-                },
+                ],
                 "responses": {
                     "200": {
                         "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "file doesn't exists"
                     },
                     "401": {
                         "description": "endpoint requires authentication"
                     },
                     "403": {
                         "description": "user doesn't have required access rights"
+                    },
+                    "405": {
+                        "description": "specified file is out of bounds of the allowed paths"
                     },
                     "500": {
                         "description": "server-side error"
