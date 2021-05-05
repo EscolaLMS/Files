@@ -23,6 +23,12 @@ class Handler extends \Illuminate\Foundation\Exceptions\Handler
         if ($exception instanceof Renderable) {
             return $exception->render();
         }
+        elseif ($exception instanceof DirectoryOutsideOfRootException)
+        {
+            return new JsonResponse([
+                'message' => $exception->getMessage(),
+            ], 405);
+        }
         else
         {
             return parent::render($request, $exception);

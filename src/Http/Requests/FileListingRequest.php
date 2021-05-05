@@ -2,7 +2,6 @@
 
 namespace EscolaLms\Files\Http\Requests;
 
-use EscolaLms\Files\Http\Exceptions\Handler;
 use Illuminate\Foundation\Http\FormRequest;
 
 class FileListingRequest extends FormRequest
