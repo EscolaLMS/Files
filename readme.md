@@ -1,5 +1,14 @@
 # Files 
 
+Files browser package
+
+[![codecov](https://codecov.io/gh/EscolaLMS/Files/branch/main/graph/badge.svg?token=NRAN4R8AGZ)](https://codecov.io/gh/EscolaLMS/Files)
+[![phpunit](https://github.com/EscolaLMS/Files/actions/workflows/test.yml/badge.svg)](https://github.com/EscolaLMS/Files/actions/workflows/test.yml)
+[![downloads](https://img.shields.io/packagist/dt/escolalms/files)](https://packagist.org/packages/escolalms/files)
+[![downloads](https://img.shields.io/packagist/v/escolalms/files)](https://packagist.org/packages/escolalms/files)
+[![downloads](https://img.shields.io/packagist/l/escolalms/files)](https://packagist.org/packages/escolalms/files)
+
+
 Reusage files API 
 
 ## Installation
