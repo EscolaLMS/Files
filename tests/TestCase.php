@@ -47,7 +47,7 @@ class TestCase extends \EscolaLms\Core\Tests\TestCase
     protected function getEnvironmentSetUp($app)
     {
         parent::getEnvironmentSetUp($app);
-//        $app['config']->set('passport.client_uuids', false);
+        $app['config']->set('passport.client_uuids', false);
     }
 
     public function ignorePackageDiscoveriesFrom()
