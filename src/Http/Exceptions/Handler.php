@@ -1,6 +1,7 @@
 <?php
 namespace EscolaLms\Files\Http\Exceptions;
 
+use EscolaLms\Files\Http\Exceptions\Contracts\Renderable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,11 +20,8 @@ class Handler extends \Illuminate\Foundation\Exceptions\Handler
      */
     public function render($request, Throwable $exception)
     {
-        if ($exception instanceof PutAllException)
-        {
-            return new JsonResponse([
-                'message' => $exception->getMessage(),
-            ], 422);
+        if ($exception instanceof Renderable) {
+            return $exception->render();
         }
         elseif ($exception instanceof DirectoryOutsideOfRootException)
         {
