@@ -18,7 +18,7 @@ class FileService implements FileServiceContract
 
     public function __construct(FilesystemManager $manager)
     {
-        $this->disk = $manager->disk('files');
+        $this->disk = $manager->disk();
     }
 
     public function findAll(string $directory, array $list): array
