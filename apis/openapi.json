@@ -152,14 +152,14 @@
                         "multipart/form-data": {
                             "schema": {
                                 "required": [
-                                    "source",
-                                    "destination"
+                                    "source_url",
+                                    "destination_url"
                                 ],
                                 "properties": {
-                                    "source": {
+                                    "source_url": {
                                         "type": "string"
                                     },
-                                    "destination": {
+                                    "destination_url": {
                                         "type": "string"
                                     }
                                 },
@@ -180,6 +180,9 @@
                     },
                     "403": {
                         "description": "user doesn't have required access rights"
+                    },
+                    "422": {
+                        "description": "Couldn't perform the action"
                     },
                     "500": {
                         "description": "server-side error"
