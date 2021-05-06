@@ -57,6 +57,7 @@ class FileApiController extends EscolaLmsBaseController implements FileApiSwagge
 
     public function move(FileMoveRequest $request): JsonResponse
     {
+        $this->service->move($request->getParamSource(),$request->getParamDestination());
         return new JsonResponse([
             'success' => true
         ], 200);

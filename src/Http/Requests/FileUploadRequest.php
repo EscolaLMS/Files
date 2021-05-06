@@ -2,6 +2,7 @@
 
 namespace EscolaLms\Files\Http\Requests;
 
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class FileUploadRequest extends FormRequest
@@ -11,7 +12,9 @@ class FileUploadRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        /** @var User $user */
+        $user = $this->user();
+        return $user!=null && $user->can('upload:files');
     }
 
     /**
@@ -25,10 +28,5 @@ class FileUploadRequest extends FormRequest
             'target' => 'required',
             'file' => 'required',
         ];
-    }
-
-    public function getAcceptableContentTypes()
-    {
-        return ['multipart/form-data'];
     }
 }
