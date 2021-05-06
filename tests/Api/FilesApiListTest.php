@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 class FilesApiListTest extends TestCase
 {
     private string $url = '/api/file/list';
+    private string $storagePath = '/storage';
 
     public function testDirectoryListMainDirectory()
     {
@@ -73,6 +74,37 @@ class FilesApiListTest extends TestCase
                 'created_at' => date(DATE_RFC3339, $file2->getCTime()),
                 'mime' => $file2->getMimeType(),
                 'url' => $path.'/'.$file2->getClientOriginalName(),
+            ],
+        ]);
+    }
+
+    public function testRecursiveListInDirectory()
+    {
+        $file = UploadedFile::fake()->image('test.png');
+        $fileName = $file->getClientOriginalName();
+
+        $this->disk->makeDirectory('/directory');
+        $this->disk->putFileAs('/directory',$file, $fileName);
+
+        $response = $this->getWithQuery(
+            $this->url,
+            [
+                'directory' => '/',
+            ],
+        );
+        $response->assertOk();
+        $response->assertJson([
+            [
+                'name' => 'directory',
+                'created_at' => date(DATE_RFC3339, $file->getCTime()),
+                'mime' => 'directory',
+                'url' => $this->storagePath.'/directory',
+            ],
+            [
+                'name' => $fileName,
+                'created_at' => date(DATE_RFC3339, $file->getCTime()),
+                'mime' => $file->getMimeType(),
+                'url' => $this->storagePath.'/directory/'.$file->getClientOriginalName(),
             ],
         ]);
     }

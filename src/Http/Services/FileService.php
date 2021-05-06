@@ -59,17 +59,16 @@ class FileService implements FileServiceContract
     public function listInfo(string $directory): Collection
     {
         try {
-            return collect($this->disk->files($directory))
-                ->map(function (string $path) {
+            return collect($this->disk->listContents($directory, true))
+                ->map(function (array $metadata) {
                     return [
-                        'name' => basename($path),
-                        'created_at' => date(DATE_RFC3339, $this->disk->getTimestamp($path)),
-                        'mime' => $this->disk->mimeType($path),
-                        'url' => $this->disk->url($path),
+                        'name' => $metadata['basename'],
+                        'created_at' => date(DATE_RFC3339, $metadata['timestamp']),
+                        'mime' => $this->disk->mimeType($metadata['path']),
+                        'url' => $this->disk->url($metadata['path']),
 
                     ];
-                }
-                );
+                });
         }
         catch( \LogicException $exception)
         {
