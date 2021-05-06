@@ -14,7 +14,7 @@ class TestCase extends \EscolaLms\Core\Tests\TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->disk = Storage::fake('files');
+        $this->disk = Storage::fake();
     }
 
     protected function getPackageProviders($app)
