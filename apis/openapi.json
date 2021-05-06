@@ -83,7 +83,12 @@
                     "500": {
                         "description": "server-side error"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
             }
         },
         "/api/file/upload": {
@@ -136,7 +141,12 @@
                     "422": {
                         "description": "server-side error"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
             }
         },
         "/api/file/move": {
@@ -187,7 +197,12 @@
                     "500": {
                         "description": "server-side error"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
             }
         },
         "/api/file/delete": {
@@ -226,7 +241,12 @@
                     "500": {
                         "description": "server-side error"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
             }
         }
     }
