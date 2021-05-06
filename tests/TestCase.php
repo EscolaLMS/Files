@@ -27,7 +27,7 @@ class TestCase extends \EscolaLms\Core\Tests\TestCase
         $user = User::factory()->create();
         $user->givePermissionTo(
             "list:files",
-            "edit:files",
+            "upload:files",
             "move:files",
             "delete:files",
         );
