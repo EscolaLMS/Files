@@ -2,6 +2,7 @@
 
 namespace EscolaLms\Files\Http\Services;
 
+use EscolaLms\Files\Http\Exceptions\CannotDeleteFile;
 use EscolaLms\Files\Http\Exceptions\DirectoryOutsideOfRootException;
 use EscolaLms\Files\Http\Exceptions\MoveException;
 use EscolaLms\Files\Http\Exceptions\PutAllException;
@@ -73,6 +74,29 @@ class FileService implements FileServiceContract
         catch( \LogicException $exception)
         {
             throw new DirectoryOutsideOfRootException($directory);
+        }
+    }
+
+    /**
+     * @param string $url
+     * @throws CannotDeleteFile
+     * @throws DirectoryOutsideOfRootException
+     */
+    public function delete(string $url): void
+    {
+        $prefix = $this->disk->url('');
+        if (substr($url,0,strlen($prefix)) === $prefix) {
+            $path = substr($url,strlen($prefix));
+        } else {
+            $path = $url;
+        }
+        try {
+            $deleted = $this->disk->delete($path);
+            if (!$deleted) {
+                throw new CannotDeleteFile($url);
+            }
+        } catch( \LogicException $e ) {
+            throw new DirectoryOutsideOfRootException($url);
         }
     }
 

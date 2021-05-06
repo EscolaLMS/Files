@@ -65,6 +65,7 @@ class FileApiController extends EscolaLmsBaseController implements FileApiSwagge
 
     public function delete(FileDeleteRequest $request): JsonResponse
     {
+        $this->service->delete($request->getParamUrl());
         return new JsonResponse([
             'success' => true
         ], 200);

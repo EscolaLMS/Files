@@ -4,6 +4,7 @@ namespace EscolaLms\Files\Tests\Api;
 
 use EscolaLms\Files\Tests\TestCase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class FilesApiListTest extends TestCase
 {
