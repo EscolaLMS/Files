@@ -22,6 +22,9 @@ interface FileApiSwagger
      *     path="/api/file/list",
      *     summary="Lists files prefixed by given directory name",
      *     tags={"Files"},
+     *     security={
+     *         {"passport": {}},
+     *     },
      *     @OA\Parameter(
      *         name="directory",
      *         in="query",
@@ -47,8 +50,8 @@ interface FileApiSwagger
      *         )
      *     ),
      *     @OA\Response(
-     *          response=200,
-     *          description="successful operation",
+     *         response=200,
+     *         description="successful operation",
      *         @OA\MediaType(
      *            mediaType="application/json",
      *            @OA\Schema(
@@ -110,6 +113,9 @@ interface FileApiSwagger
      *     path="/api/file/upload",
      *     summary="Upload files using multipart form-data",
      *     tags={"Files"},
+     *     security={
+     *         {"passport": {}},
+     *     },
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\MediaType(
@@ -165,6 +171,9 @@ interface FileApiSwagger
      *     path="/api/file/move",
      *     summary="Move the file from one path to another",
      *     tags={"Files"},
+     *     security={
+     *         {"passport": {}},
+     *     },
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\MediaType(
@@ -213,6 +222,9 @@ interface FileApiSwagger
      *     path="/api/file/delete",
      *     summary="Delete given file",
      *     tags={"Files"},
+     *     security={
+     *         {"passport": {}},
+     *     },
      *     @OA\Parameter(
      *         name="url",
      *         in="query",
