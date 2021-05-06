@@ -2,6 +2,7 @@
 
 namespace EscolaLms\Files\Http\Requests;
 
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class FileDeleteRequest extends FormRequest
@@ -11,7 +12,9 @@ class FileDeleteRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        /** @var User $user */
+        $user = $this->user();
+        return $user!=null && $user->can('delete:files');
     }
 
     /**

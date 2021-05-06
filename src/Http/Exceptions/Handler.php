@@ -40,4 +40,9 @@ class Handler extends \Illuminate\Foundation\Exceptions\Handler
             return parent::render($request, $exception);
         }
     }
+
+    public function report(Throwable $e)
+    {
+        return parent::report($e);
+    }
 }

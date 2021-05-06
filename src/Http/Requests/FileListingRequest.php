@@ -2,6 +2,7 @@
 
 namespace EscolaLms\Files\Http\Requests;
 
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class FileListingRequest extends FormRequest
@@ -11,7 +12,9 @@ class FileListingRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        /** @var User $user */
+        $user = $this->user();
+        return $user!=null && $user->can('list:files');
     }
 
     /**
