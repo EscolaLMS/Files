@@ -2,6 +2,7 @@
 
 namespace EscolaLms\Files\Tests;
 
+use EscolaLms\Core\EscolaLmsServiceProvider;
 use EscolaLms\Core\Models\User;
 use EscolaLms\Files\EscolaLmsFilesServiceProvider;
 use Illuminate\Contracts\Filesystem\Filesystem;
@@ -39,6 +40,7 @@ class TestCase extends \EscolaLms\Core\Tests\TestCase
         return [
             ...parent::getPackageProviders($app),
             EscolaLmsFilesServiceProvider::class,
+            EscolaLmsServiceProvider::class,
             PassportServiceProvider::class,
             PermissionServiceProvider::class,
         ];
