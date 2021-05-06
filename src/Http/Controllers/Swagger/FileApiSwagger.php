@@ -171,9 +171,9 @@ interface FileApiSwagger
      *            mediaType="multipart/form-data",
      *            @OA\Schema(
      *                type="object",
-     *                required={"source","destination"},
-     *                @OA\Property(property="source", type="string"),
-     *                @OA\Property(property="destination", type="string"),
+     *                required={"source_url","destination_url"},
+     *                @OA\Property(property="source_url", type="string"),
+     *                @OA\Property(property="destination_url", type="string"),
      *            )
      *         )
      *     ),
@@ -192,6 +192,10 @@ interface FileApiSwagger
      *     @OA\Response(
      *          response=403,
      *          description="user doesn't have required access rights",
+     *      ),
+     *     @OA\Response(
+     *          response=422,
+     *          description="Couldn't perform the action",
      *      ),
      *     @OA\Response(
      *          response=500,

@@ -25,6 +25,23 @@ class FileMoveRequest extends FormRequest
     public function rules()
     {
         return [
+            'source_url' => ['string','required'],
+            'destination_url' => ['string','required'],
         ];
+    }
+
+    public function getAcceptableContentTypes()
+    {
+        return ['application/json'];
+    }
+
+    public function getParamSource(): string
+    {
+        return $this->get('source_url');
+    }
+
+    public function getParamDestination(): string
+    {
+        return $this->get('destination_url');
     }
 }

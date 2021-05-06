@@ -12,5 +12,7 @@ interface FileServiceContract
 
     public function listInfo(string $directory): Collection;
 
+    public function move(string $sourceUrl, string $destinationUrl): void;
+
     public function delete(string $url): void;
 }
