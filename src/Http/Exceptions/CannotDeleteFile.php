@@ -1,7 +1,11 @@
 <?php
 namespace EscolaLms\Files\Http\Exceptions;
 
-class CannotDeleteFile extends \Exception
+use EscolaLms\Files\Http\Exceptions\Contracts\Renderable;
+use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+
+class CannotDeleteFile extends \Exception implements Renderable
 {
     /**
      * CannotDeleteFile constructor.
@@ -10,5 +14,12 @@ class CannotDeleteFile extends \Exception
     public function __construct(string $filename)
     {
         parent::__construct(sprintf('Failed to delete the file "%s"', $filename));
+    }
+
+    function render(): Response
+    {
+        return new JsonResponse([
+            'message' => $this->getMessage(),
+        ], 400);
     }
 }
