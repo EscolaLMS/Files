@@ -9,7 +9,7 @@ class FilesApiDeleteTest extends TestCase
 {
     private string $url = '/api/file/delete';
 
-    public function testDeleteFromMainDirectory()
+    public function testDeleteFileFromMainDirectory()
     {
         $file = UploadedFile::fake()->image('test.png');
         $this->disk->putFileAs('/',$file, $file->getClientOriginalName());
@@ -17,11 +17,19 @@ class FilesApiDeleteTest extends TestCase
         $response->assertOk();
     }
 
-    public function testDeleteFromSubdirectory()
+    public function testDeleteFileFromSubdirectory()
     {
         $file = UploadedFile::fake()->image('test.png');
         $this->disk->putFileAs('/directory',$file, $file->getClientOriginalName());
         $response = $this->deleteWithQuery($this->url, ['url'=>'/storage/directory/'.$file->getClientOriginalName()]);
+        $response->assertOk();
+    }
+
+    public function testDeleteDirectoryWithFiles()
+    {
+        $file = UploadedFile::fake()->image('test.png');
+        $this->disk->putFileAs('/directory',$file, $file->getClientOriginalName());
+        $response = $this->deleteWithQuery($this->url, ['url'=>'/storage/directory']);
         $response->assertOk();
     }
 
