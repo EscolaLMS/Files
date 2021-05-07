@@ -90,7 +90,15 @@ class FileService implements FileServiceContract
             $path = $url;
         }
         try {
-            $deleted = $this->disk->delete($path);
+            if ($this->disk->exists($path)) {
+                if ($this->disk->mimeType($path) === 'directory') {
+                    $deleted = $this->disk->deleteDirectory($path);
+                } else {
+                    $deleted = $this->disk->delete($path);
+                }
+            } else {
+                $deleted = false;
+            }
             if (!$deleted) {
                 throw new CannotDeleteFile($url);
             }
