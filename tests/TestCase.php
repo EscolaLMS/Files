@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Testing\TestResponse;
 use Laravel\Passport\PassportServiceProvider;
 use Spatie\Permission\PermissionServiceProvider;
+use EscolaLms\Files\Seeders\PermissionTableSeeder;
 
 class TestCase extends \EscolaLms\Core\Tests\TestCase
 {
@@ -23,6 +24,7 @@ class TestCase extends \EscolaLms\Core\Tests\TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->seed(PermissionTableSeeder::class);
         $this->disk = Storage::fake();
 
         $user = User::factory()->create();
