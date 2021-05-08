@@ -14,7 +14,7 @@ class FileDeleteRequest extends FormRequest
     {
         /** @var User $user */
         $user = $this->user();
-        return $user!=null && $user->can('delete:files');
+        return $user!=null && $user->can('delete:files', 'api');
     }
 
     /**
