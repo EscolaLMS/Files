@@ -14,7 +14,7 @@ class FileMoveRequest extends FormRequest
     {
         /** @var User $user */
         $user = $this->user();
-        return $user!=null && $user->can('move:files');
+        return $user!=null && $user->can('move:files', 'api');
     }
 
     /**

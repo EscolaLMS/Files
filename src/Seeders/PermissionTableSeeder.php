@@ -4,15 +4,22 @@ namespace EscolaLms\Files\Seeders;
 
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class PermissionTableSeeder extends Seeder
 {
     public function run()
     {
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
-        Permission::create(['name'=>'list:files', 'guard_name'=>'web']);
-        Permission::create(['name'=>'upload:files', 'guard_name'=>'web']);
-        Permission::create(['name'=>'move:files', 'guard_name'=>'web']);
-        Permission::create(['name'=>'delete:files', 'guard_name'=>'web']);
+        Permission::findOrCreate('list:files', 'api');
+        Permission::findOrCreate('upload:files', 'api');
+        Permission::findOrCreate('move:files', 'api');
+        Permission::findOrCreate('delete:files', 'api');
+
+        $admin = Role::findOrCreate('admin', 'api');
+        $tutor = Role::findOrCreate('tutor', 'api');
+
+        $admin->givePermissionTo(['list:files', 'upload:files', 'move:files', 'delete:files']);
+        $tutor->givePermissionTo(['list:files', 'upload:files', 'move:files', 'delete:files']);
     }
 }
