@@ -1,34 +1,32 @@
 {
-  "name": "escolalms/files",
-  "description": "Escola file repository API.",
-  "type": "package",
-  "require": {
-    "php": ">=7.4",
-    "laravel/framework": ">=8.0",
-    "escolalms/core": ">=0.1.6"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^9.0",
-    "orchestra/testbench": ">=5.0"
-  },
-  "license": "Apache-2.0",
-  "authors": [
-    {
-      "name": "Mariusz Gliwiński",
-      "email": "mariusz.gliwinski@escola.pl"
+    "name": "escolalms/files",
+    "description": "Escola file repository API.",
+    "type": "package",
+    "require": {
+        "php": ">=7.4",
+        "laravel/framework": ">=8.0",
+        "escolalms/core": "^1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0",
+        "orchestra/testbench": ">=5.0"
+    },
+    "license": "Apache-2.0",
+    "authors": [{
+        "name": "Mariusz Gliwiński",
+        "email": "mariusz.gliwinski@escola.pl"
+    }],
+    "autoload": {
+        "psr-4": {
+            "EscolaLms\\Files\\": "src",
+            "EscolaLms\\Files\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "EscolaLms\\Files\\EscolaLmsFilesServiceProvider"
+            ]
+        }
     }
-  ],
-  "autoload": {
-    "psr-4": {
-      "EscolaLms\\Files\\": "src",
-      "EscolaLms\\Files\\Tests\\": "tests"
-    }
-  },
-  "extra": {
-    "laravel": {
-      "providers": [
-        "EscolaLms\\Files\\EscolaLmsFilesServiceProvider"
-      ]
-    }
-  }
 }

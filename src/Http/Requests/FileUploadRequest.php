@@ -14,7 +14,7 @@ class FileUploadRequest extends FormRequest
     {
         /** @var User $user */
         $user = $this->user();
-        return $user!=null && $user->can('upload:files');
+        return $user!=null && $user->can('upload:files', 'api');
     }
 
     /**

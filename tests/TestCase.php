@@ -7,22 +7,24 @@ use EscolaLms\Core\Models\User;
 use EscolaLms\Files\EscolaLmsFilesServiceProvider;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use EscolaLms\Files\Seeders\DatabaseSeeder;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Testing\TestResponse;
 use Laravel\Passport\PassportServiceProvider;
 use Spatie\Permission\PermissionServiceProvider;
+use EscolaLms\Files\Seeders\PermissionTableSeeder;
 
 class TestCase extends \EscolaLms\Core\Tests\TestCase
 {
     protected Filesystem $disk;
 
-    use RefreshDatabase;
+    use DatabaseTransactions;
 
     protected function setUp(): void
     {
         parent::setUp();
+        $this->seed(PermissionTableSeeder::class);
         $this->disk = Storage::fake();
 
         $user = User::factory()->create();
