@@ -7,7 +7,7 @@ use EscolaLms\Core\Models\User;
 use EscolaLms\Files\EscolaLmsFilesServiceProvider;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use EscolaLms\Files\Seeders\DatabaseSeeder;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Testing\TestResponse;
@@ -18,7 +18,7 @@ class TestCase extends \EscolaLms\Core\Tests\TestCase
 {
     protected Filesystem $disk;
 
-    use RefreshDatabase;
+    use DatabaseTransactions;
 
     protected function setUp(): void
     {
