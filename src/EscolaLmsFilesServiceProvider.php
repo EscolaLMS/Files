@@ -33,6 +33,9 @@ class EscolaLmsFilesServiceProvider extends ServiceProvider
         $this->app->bind(
             ExceptionHandler::class,Handler::class,
         );
+        $this->publishes([
+            __DIR__ . '/../database/seeders' => database_path('seeders'),
+        ], 'files-seeders');
         $this->loadRoutesFrom(__DIR__ . '/routes.php');
     }
 }

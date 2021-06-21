@@ -26,6 +26,8 @@ class FilesApiListTest extends TestCase
             [
                 'directory' => $directory,
             ],
+            [],
+            true
         );
         $response->assertOk();
         $response->assertJson([
@@ -60,6 +62,8 @@ class FilesApiListTest extends TestCase
             [
                 'directory' => $directory,
             ],
+            [],
+            true
         );
         $response->assertOk();
         $response->assertJson([
@@ -91,6 +95,8 @@ class FilesApiListTest extends TestCase
             [
                 'directory' => '/',
             ],
+            [],
+            true
         );
         $response->assertOk();
         $response->assertJson([
@@ -115,7 +121,9 @@ class FilesApiListTest extends TestCase
             $this->url,
             [
                 'directory' => '../../',
-            ]
+            ],
+            [],
+            true
         );
         $response->assertStatus(405);
     }
@@ -127,7 +135,9 @@ class FilesApiListTest extends TestCase
             [
                 'directory' => '/',
                 'perPage' => -1
-            ]
+            ],
+            [],
+            true
         );
         $response->assertStatus(302);
     }
@@ -139,7 +149,9 @@ class FilesApiListTest extends TestCase
             [
                 'directory' => '/',
                 'page' => -1,
-            ]
+            ],
+            [],
+            true
         );
         $response->assertStatus(302);
     }
