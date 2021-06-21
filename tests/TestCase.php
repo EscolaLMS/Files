@@ -4,16 +4,16 @@ namespace EscolaLms\Files\Tests;
 
 use EscolaLms\Core\EscolaLmsServiceProvider;
 use EscolaLms\Core\Models\User;
+use EscolaLms\Files\Database\Seeders\DatabaseSeeder;
+use EscolaLms\Files\Database\Seeders\PermissionTableSeeder;
 use EscolaLms\Files\EscolaLmsFilesServiceProvider;
 use Illuminate\Contracts\Filesystem\Filesystem;
-use EscolaLms\Files\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Testing\TestResponse;
 use Laravel\Passport\PassportServiceProvider;
 use Spatie\Permission\PermissionServiceProvider;
-use EscolaLms\Files\Seeders\PermissionTableSeeder;
 
 class TestCase extends \EscolaLms\Core\Tests\TestCase
 {
