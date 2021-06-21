@@ -17,7 +17,7 @@ class FilesApiMoveTest extends TestCase
         $sourceUrl = '/storage/'.$source->getClientOriginalName();
         $destinationUrl = '/storage/test2.png';
 
-        $response = $this->postJson($this->url,['source_url'=>$sourceUrl, 'destination_url'=>$destinationUrl]);
+        $response = $this->actingAs(auth()->user(), 'api')->postJson($this->url,['source_url'=>$sourceUrl, 'destination_url'=>$destinationUrl]);
         $response->assertOk();
     }
 
@@ -29,7 +29,7 @@ class FilesApiMoveTest extends TestCase
         $sourceUrl = '/storage/'.$source->getClientOriginalName();
         $destinationUrl = '/storage/subdirectory/test2.png';
 
-        $response = $this->postJson($this->url,['source_url'=>$sourceUrl, 'destination_url'=>$destinationUrl]);
+        $response = $this->actingAs(auth()->user(), 'api')->postJson($this->url,['source_url'=>$sourceUrl, 'destination_url'=>$destinationUrl]);
         $response->assertOk();
     }
 
@@ -41,7 +41,7 @@ class FilesApiMoveTest extends TestCase
         $sourceUrl = '/storage/subdirectory/'.$source->getClientOriginalName();
         $destinationUrl = '/test2.png';
 
-        $response = $this->postJson($this->url,['source_url'=>$sourceUrl, 'destination_url'=>$destinationUrl]);
+        $response = $this->actingAs(auth()->user(), 'api')->postJson($this->url,['source_url'=>$sourceUrl, 'destination_url'=>$destinationUrl]);
         $response->assertOk();
     }
 
@@ -50,13 +50,13 @@ class FilesApiMoveTest extends TestCase
         $sourceUrl = '/test1.png';
         $destinationUrl = '/test2.png';
 
-        $response = $this->postJson($this->url,['source_url'=>$sourceUrl, 'destination_url'=>$destinationUrl]);
+        $response = $this->actingAs(auth()->user(), 'api')->postJson($this->url,['source_url'=>$sourceUrl, 'destination_url'=>$destinationUrl]);
         $response->assertStatus(422);
     }
 
     public function testMoveFileWithMissingSource()
     {
-        $response = $this->postJson($this->url,['destination_url'=>'/test2.jpg']);
+        $response = $this->actingAs(auth()->user(), 'api')->postJson($this->url,['destination_url'=>'/test2.jpg']);
         $response->assertStatus(422);
     }
 
@@ -65,7 +65,7 @@ class FilesApiMoveTest extends TestCase
         $source = UploadedFile::fake()->image('test.png');
         $this->disk->putFileAs('/', $source, $source->getClientOriginalName());
 
-        $response = $this->postJson($this->url,['source_url'=>'/storage/'.$source->getClientOriginalName()]);
+        $response = $this->actingAs(auth()->user(), 'api')->postJson($this->url,['source_url'=>'/storage/'.$source->getClientOriginalName()]);
         $response->assertStatus(422);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace EscolaLms\Files\Seeders;
+namespace EscolaLms\Files\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;

@@ -11,7 +11,7 @@ class FilesApiUploadTest extends TestCase
     {
         $target = '/';
         $file = UploadedFile::fake()->image('file');
-        $response = $this->post(
+        $response = $this->actingAs(auth()->user(), 'api')->post(
             '/api/file/upload',
             [
                 'file' => [$file],
@@ -26,7 +26,7 @@ class FilesApiUploadTest extends TestCase
     {
         $target = '/';
         $file = UploadedFile::fake()->image('file');
-        $response = $this->post(
+        $response = $this->actingAs(auth()->user(), 'api')->post(
             '/api/file/upload',
             [
                 'file' => [$file],
@@ -41,7 +41,7 @@ class FilesApiUploadTest extends TestCase
     public function testSingleFileUploadMissingTarget()
     {
         $file = UploadedFile::fake()->image('file');
-        $response = $this->post(
+        $response = $this->actingAs(auth()->user(), 'api')->post(
             '/api/file/upload',
             [
                 'file' => [$file],
@@ -53,7 +53,7 @@ class FilesApiUploadTest extends TestCase
     public function testSingleFileUploadMissingFile()
     {
         $target = '/';
-        $response = $this->post(
+        $response = $this->actingAs(auth()->user(), 'api')->post(
             '/api/file/upload',
             [
                 'target' => $target,
@@ -66,7 +66,7 @@ class FilesApiUploadTest extends TestCase
     {
         $target = '/';
         $file = UploadedFile::fake()->image('duplicate');
-        $response = $this->post(
+        $response = $this->actingAs(auth()->user(), 'api')->post(
             '/api/file/upload',
             [
                 'file' => [$file],
@@ -77,7 +77,7 @@ class FilesApiUploadTest extends TestCase
         $this->disk->assertExists($file->getClientOriginalName());
 
         $file = UploadedFile::fake()->image('duplicate');
-        $response = $this->post(
+        $response = $this->actingAs(auth()->user(), 'api')->post(
             '/api/file/upload',
             [
                 'file' => [$file],
@@ -95,7 +95,7 @@ class FilesApiUploadTest extends TestCase
     {
         $target = '../../';
         $file = UploadedFile::fake()->image('file');
-        $response = $this->post(
+        $response = $this->actingAs(auth()->user(), 'api')->post(
             '/api/file/upload',
             [
                 'file' => [$file],

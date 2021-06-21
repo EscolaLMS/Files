@@ -19,7 +19,8 @@
     "autoload": {
         "psr-4": {
             "EscolaLms\\Files\\": "src",
-            "EscolaLms\\Files\\Tests\\": "tests"
+            "EscolaLms\\Files\\Tests\\": "tests",
+            "EscolaLms\\Files\\Database\\Seeders\\": "database/seeders"
         }
     },
     "extra": {
