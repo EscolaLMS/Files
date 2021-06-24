@@ -16,7 +16,7 @@ class EscolaLmsFilesServiceProvider extends ServiceProvider
 
     public function register()
     {
-        app()->config['filesystems.disks.files'] = [
+        app()->config['filesystems.disks.files'][] = [
             'driver'=>'local',
             'root'=>storage_path('/files/public'),
             'url'=>env('APP_URL').'/files',
