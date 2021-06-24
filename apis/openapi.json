@@ -97,7 +97,7 @@
                     "Files"
                 ],
                 "summary": "Upload files using multipart form-data",
-                "operationId": "EscolaLms\\Files\\Http\\Controllers\\Swagger\\FileApiSwagger::upload",
+                "operationId": "e0dc9ce31c79e8a3587d2dcc55393cfb",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -155,7 +155,7 @@
                     "Files"
                 ],
                 "summary": "Move the file from one path to another",
-                "operationId": "EscolaLms\\Files\\Http\\Controllers\\Swagger\\FileApiSwagger::move",
+                "operationId": "20b2d2c3a594aa873f78ac8c10f66b05",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -211,7 +211,7 @@
                     "Files"
                 ],
                 "summary": "Delete given file",
-                "operationId": "EscolaLms\\Files\\Http\\Controllers\\Swagger\\FileApiSwagger::delete",
+                "operationId": "b8e73d6b586c4b5a0d8416404e92710c",
                 "parameters": [
                     {
                         "name": "url",
