@@ -16,6 +16,7 @@ class EscolaLmsFilesServiceProvider extends ServiceProvider
 
     public function register()
     {
+        /*
         app()->config['filesystems.disks.files'][] = [
             'driver'=>'local',
             'root'=>storage_path('/files/public'),
@@ -25,6 +26,7 @@ class EscolaLmsFilesServiceProvider extends ServiceProvider
         app()->config['filesystems.links'] = [
             public_path('files') => storage_path('files/public'),
         ];
+        */
         parent::register();
     }
 
