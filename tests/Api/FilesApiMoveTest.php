@@ -7,7 +7,7 @@ use Illuminate\Http\UploadedFile;
 
 class FilesApiMoveTest extends TestCase
 {
-    private $url = '/api/file/move';
+    private $url = '/api/admin/file/move';
 
     public function testMoveExistingFileInRoot()
     {

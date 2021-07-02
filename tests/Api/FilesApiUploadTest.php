@@ -12,7 +12,7 @@ class FilesApiUploadTest extends TestCase
         $target = '/';
         $file = UploadedFile::fake()->image('file');
         $response = $this->actingAs(auth()->user(), 'api')->post(
-            '/api/file/upload',
+            '/api/admin/file/upload',
             [
                 'file' => [$file],
                 'target' => $target,
@@ -27,7 +27,7 @@ class FilesApiUploadTest extends TestCase
         $target = '/';
         $file = UploadedFile::fake()->image('file');
         $response = $this->actingAs(auth()->user(), 'api')->post(
-            '/api/file/upload',
+            '/api/admin/file/upload',
             [
                 'file' => [$file],
                 'target' => $target,
@@ -42,7 +42,7 @@ class FilesApiUploadTest extends TestCase
     {
         $file = UploadedFile::fake()->image('file');
         $response = $this->actingAs(auth()->user(), 'api')->post(
-            '/api/file/upload',
+            '/api/admin/file/upload',
             [
                 'file' => [$file],
             ],
@@ -54,7 +54,7 @@ class FilesApiUploadTest extends TestCase
     {
         $target = '/';
         $response = $this->actingAs(auth()->user(), 'api')->post(
-            '/api/file/upload',
+            '/api/admin/file/upload',
             [
                 'target' => $target,
             ],
@@ -67,7 +67,7 @@ class FilesApiUploadTest extends TestCase
         $target = '/';
         $file = UploadedFile::fake()->image('duplicate');
         $response = $this->actingAs(auth()->user(), 'api')->post(
-            '/api/file/upload',
+            '/api/admin/file/upload',
             [
                 'file' => [$file],
                 'target' => $target,
@@ -78,7 +78,7 @@ class FilesApiUploadTest extends TestCase
 
         $file = UploadedFile::fake()->image('duplicate');
         $response = $this->actingAs(auth()->user(), 'api')->post(
-            '/api/file/upload',
+            '/api/admin/file/upload',
             [
                 'file' => [$file],
                 'target' => $target,
@@ -96,7 +96,7 @@ class FilesApiUploadTest extends TestCase
         $target = '../../';
         $file = UploadedFile::fake()->image('file');
         $response = $this->actingAs(auth()->user(), 'api')->post(
-            '/api/file/upload',
+            '/api/admin/file/upload',
             [
                 'file' => [$file],
                 'target' => $target,

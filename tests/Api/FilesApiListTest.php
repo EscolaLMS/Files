@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 
 class FilesApiListTest extends TestCase
 {
-    private string $url = '/api/file/list';
+    private string $url = '/api/admin/file/list';
     private string $storagePath = '/storage';
 
     public function testDirectoryListMainDirectory()
