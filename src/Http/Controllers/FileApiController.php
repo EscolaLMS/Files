@@ -35,39 +35,42 @@ class FileApiController extends EscolaLmsBaseController implements FileApiSwagge
 
         $list = $this->service->findAll($target, $files);
         if (!empty($list)) {
-            return new JsonResponse([
-                'error' => sprintf("Following files already exist: %s", join(", ", $list))
-            ], 409);
+            $this->sendError(sprintf("Following files already exist: %s", join(", ", $list)), 409);
         }
 
-        $this->service->putAll($target, $files);
+        $paths = $this->service->putAll($target, $files);
 
-        return new JsonResponse([
-            'success' => true
-        ], 200);
+        return $this->sendResponse($paths, 'files uploaded successfully');
     }
 
     public function list(FileListingRequest $request): JsonResponse
     {
-        $info = $this->service->listInfo($request->getDirectory())
-            ->forPage($request->getPage(), $request->getPerPage())
-        ;
-        return new JsonResponse($info, 200);
+        $perPage = $request->getPerPage();
+        $page = $request->getPage();
+
+        $list = $this->service->listInfo($request->getDirectory());
+        $info = [
+            'current_page' => $page,
+            'per_page'=>  $perPage,
+            'last_page' => ceil($list->count() / $perPage),
+            'total' => $list->count(),
+            'data' => $list->forPage($page, $perPage)
+        ];
+
+        return $this->sendResponse($info, 'file list fetched successfully');
     }
 
     public function move(FileMoveRequest $request): JsonResponse
     {
-        $this->service->move($request->getParamSource(),$request->getParamDestination());
-        return new JsonResponse([
-            'success' => true
-        ], 200);
+        $success = $this->service->move($request->getParamSource(), $request->getParamDestination());
+
+        return $this->sendResponse($success, 'file moved successfully');
     }
 
     public function delete(FileDeleteRequest $request): JsonResponse
     {
-        $this->service->delete($request->getParamUrl());
-        return new JsonResponse([
-            'success' => true
-        ], 200);
+        $success = $this->service->delete($request->getParamUrl());
+
+        return $this->sendResponse($success, 'file deleted successfully');
     }
 }
