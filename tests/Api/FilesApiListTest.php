@@ -91,7 +91,7 @@ class FilesApiListTest extends TestCase
         $file = UploadedFile::fake()->image('test.png');
         $fileName = $file->getClientOriginalName();
 
-        $this->disk->makeDirectory('/directory');
+        $this->disk->makeDirectory('/directory/subdirectory');
         $this->disk->putFileAs('/directory', $file, $fileName);
 
         $response = $this->getWithQuery(
@@ -105,10 +105,10 @@ class FilesApiListTest extends TestCase
         $response->assertOk();
         $response->assertJsonFragment(['data' => ['data' => [
             [
-                'name' => 'directory',
+                'name' => 'subdirectory',
                 'created_at' => date(DATE_RFC3339, $file->getCTime()),
                 'mime' => 'directory',
-                'url' => $this->storagePath.'/directory',
+                'url' => $this->storagePath.'/directory/subdirectory',
                 'isDir' => true
             ],
             [
