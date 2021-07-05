@@ -68,7 +68,7 @@ class FilesApiListTest extends TestCase
             true
         );
         $response->assertOk();
-        $response->assertJson(['data' => [
+        $response->assertJsonFragment(['data' => [
             [
                 'name' => $file1->getClientOriginalName(),
                 'created_at' => date(DATE_RFC3339, $file1->getCTime()),
@@ -103,7 +103,7 @@ class FilesApiListTest extends TestCase
             true
         );
         $response->assertOk();
-        $response->assertJson(['data' => [
+        $response->assertJsonFragment(['data' => [
             [
                 'name' => 'directory',
                 'created_at' => date(DATE_RFC3339, $file->getCTime()),
