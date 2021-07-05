@@ -91,8 +91,8 @@ class FilesApiListTest extends TestCase
         $file = UploadedFile::fake()->image('test.png');
         $fileName = $file->getClientOriginalName();
 
-        $this->disk->makeDirectory('/directory/subdirectory', 0777, true, true);
-        $this->disk->putFileAs('/directory', $file, $fileName);
+        $this->disk->makeDirectory('/directory', 0777, true, true);
+        $this->disk->putFileAs('/', $file, $fileName);
 
         $response = $this->getWithQuery(
             $this->url,
@@ -108,14 +108,14 @@ class FilesApiListTest extends TestCase
                 'name' => 'subdirectory',
                 'created_at' => date(DATE_RFC3339, $file->getCTime()),
                 'mime' => 'directory',
-                'url' => $this->storagePath.'/directory/subdirectory',
+                'url' => $this->storagePath.'/directory',
                 'isDir' => true
             ],
             [
                 'name' => $fileName,
                 'created_at' => date(DATE_RFC3339, $file->getCTime()),
                 'mime' => $file->getMimeType(),
-                'url' => $this->storagePath.'/directory/'.$file->getClientOriginalName(),
+                'url' => $this->storagePath.'/'.$file->getClientOriginalName(),
                 'isDir' => false
             ],
         ]]]);
