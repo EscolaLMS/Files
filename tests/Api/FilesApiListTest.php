@@ -103,7 +103,7 @@ class FilesApiListTest extends TestCase
             true
         );
         $response->assertOk();
-        $response->assertJsonFragment(['data' => ['data' => [
+        $response->assertJsonFragment(['data' => [
             [
                 'name' => 'directory',
                 'created_at' => date(DATE_RFC3339, $file->getCTime()),
@@ -118,7 +118,7 @@ class FilesApiListTest extends TestCase
                 'url' => $this->storagePath.'/'.$file->getClientOriginalName(),
                 'isDir' => false
             ],
-        ]]]);
+        ]]);
     }
 
     public function testListInvalidDirectory()
