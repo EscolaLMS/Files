@@ -91,7 +91,7 @@ class FilesApiListTest extends TestCase
         $file = UploadedFile::fake()->image('test.png');
         $fileName = $file->getClientOriginalName();
 
-        $this->disk->makeDirectory('/directory/subdirectory');
+        $this->disk->makeDirectory('/directory/subdirectory', 0777, true, true);
         $this->disk->putFileAs('/directory', $file, $fileName);
 
         $response = $this->getWithQuery(
