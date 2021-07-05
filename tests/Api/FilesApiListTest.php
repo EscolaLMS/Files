@@ -36,12 +36,14 @@ class FilesApiListTest extends TestCase
                 'created_at' => date(DATE_RFC3339, $file1->getCTime()),
                 'mime' => $file1->getMimeType(),
                 'url' => $path.'/'.$file1->getClientOriginalName(),
+                'isDir' => false
             ],
             [
                 'name' => $file2->getClientOriginalName(),
                 'created_at' => date(DATE_RFC3339, $file2->getCTime()),
                 'mime' => $file2->getMimeType(),
                 'url' => $path.'/'.$file2->getClientOriginalName(),
+                'isDir' => false
             ],
         ]]);
     }
@@ -72,12 +74,14 @@ class FilesApiListTest extends TestCase
                 'created_at' => date(DATE_RFC3339, $file1->getCTime()),
                 'mime' => $file1->getMimeType(),
                 'url' => $path.'/'.$file1->getClientOriginalName(),
+                'isDir' => false
             ],
             [
                 'name' => $file2->getClientOriginalName(),
                 'created_at' => date(DATE_RFC3339, $file2->getCTime()),
                 'mime' => $file2->getMimeType(),
                 'url' => $path.'/'.$file2->getClientOriginalName(),
+                'isDir' => false
             ],
         ]]);
     }
@@ -105,12 +109,14 @@ class FilesApiListTest extends TestCase
                 'created_at' => date(DATE_RFC3339, $file->getCTime()),
                 'mime' => 'directory',
                 'url' => $this->storagePath.'/directory',
+                'isDir' => true
             ],
             [
                 'name' => $fileName,
                 'created_at' => date(DATE_RFC3339, $file->getCTime()),
                 'mime' => $file->getMimeType(),
                 'url' => $this->storagePath.'/directory/'.$file->getClientOriginalName(),
+                'isDir' => false
             ],
         ]]);
     }
