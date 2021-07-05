@@ -40,16 +40,30 @@ class FileService implements FileServiceContract
      * @param string $directory
      * @param array $list
      * @throws PutAllException
+     * @return array $list
      */
-    public function putAll(string $directory, array $list): void
+    public function putAll(string $directory, array $list): array
     {
+        $paths = [];
         /** @var UploadedFile $file */
         foreach ($list as $file) {
-            if( $this->disk->putFileAs($directory,$file, $file->getClientOriginalName()) == false )
-            {
-                throw new PutAllException($file->getClientOriginalName(),$directory);
+            $path = $this->disk->putFileAs($directory, $file, $file->getClientOriginalName());
+            if ($path === false) {
+                throw new PutAllException($file->getClientOriginalName(), $directory);
             }
+            $paths[] = $path;
         }
+
+        $results = collect($paths)->map(function (string $path) {
+            return [
+                'name' => $path,
+                'created_at' => date(DATE_RFC3339),
+                'mime' => $this->disk->mimeType($path),
+                'url' => $this->disk->url($path),
+            ];
+        });
+
+        return $results->toArray();
     }
 
     /**
@@ -59,19 +73,17 @@ class FileService implements FileServiceContract
     public function listInfo(string $directory): Collection
     {
         try {
-            return collect($this->disk->listContents($directory, true))
+            return collect($this->disk->listContents($directory, false))
                 ->map(function (array $metadata) {
                     return [
                         'name' => $metadata['basename'],
                         'created_at' => date(DATE_RFC3339, $metadata['timestamp']),
                         'mime' => $this->disk->mimeType($metadata['path']),
                         'url' => $this->disk->url($metadata['path']),
-
+                        'isDir' => $this->disk->mimeType($metadata['path']) === 'directory'
                     ];
-                });
-        }
-        catch( \LogicException $exception)
-        {
+                })->sortByDesc('isDir')->values();
+        } catch (\LogicException $exception) {
             throw new DirectoryOutsideOfRootException($directory);
         }
     }
@@ -81,11 +93,11 @@ class FileService implements FileServiceContract
      * @throws CannotDeleteFile
      * @throws DirectoryOutsideOfRootException
      */
-    public function delete(string $url): void
+    public function delete(string $url): bool
     {
         $prefix = $this->disk->url('');
-        if (substr($url,0,strlen($prefix)) === $prefix) {
-            $path = substr($url,strlen($prefix));
+        if (substr($url, 0, strlen($prefix)) === $prefix) {
+            $path = substr($url, strlen($prefix));
         } else {
             $path = $url;
         }
@@ -102,9 +114,11 @@ class FileService implements FileServiceContract
             if (!$deleted) {
                 throw new CannotDeleteFile($url);
             }
-        } catch( \LogicException $e ) {
+        } catch (\LogicException $e) {
             throw new DirectoryOutsideOfRootException($url);
         }
+
+        return $deleted;
     }
 
     /**
@@ -114,7 +128,7 @@ class FileService implements FileServiceContract
      * @throws \League\Flysystem\FileExistsException
      * @throws \League\Flysystem\FileNotFoundException
      */
-    public function move(string $sourceUrl, string $destinationUrl): void
+    public function move(string $sourceUrl, string $destinationUrl): bool
     {
         try {
             $ret = $this->disk->rename($this->urlToPath($sourceUrl), $this->urlToPath($destinationUrl));
@@ -124,13 +138,14 @@ class FileService implements FileServiceContract
         } catch (\League\Flysystem\FileNotFoundException $exception) {
             throw new MoveException($sourceUrl, $destinationUrl);
         }
+        return $ret;
     }
 
     private function urlToPath(string $url): string
     {
         $prefix = $this->disk->url('');
-        if (substr($url,0,strlen($prefix)) === $prefix) {
-            $path = substr($url,strlen($prefix));
+        if (substr($url, 0, strlen($prefix)) === $prefix) {
+            $path = substr($url, strlen($prefix));
         } else {
             $path = $url;
         }

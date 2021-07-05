@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 
 class FilesApiListTest extends TestCase
 {
-    private string $url = '/api/file/list';
+    private string $url = '/api/admin/file/list';
     private string $storagePath = '/storage';
 
     public function testDirectoryListMainDirectory()
@@ -17,9 +17,9 @@ class FilesApiListTest extends TestCase
         $file2 = UploadedFile::fake()->create('test.txt', 3, 'text/plain');
 
         $directory = '/';
-        $path = rtrim('/storage/'.$directory,'/');
-        $this->disk->putFileAs($directory,$file1, $file1->getClientOriginalName());
-        $this->disk->putFileAs($directory,$file2, $file2->getClientOriginalName());
+        $path = rtrim('/storage/'.$directory, '/');
+        $this->disk->putFileAs($directory, $file1, $file1->getClientOriginalName());
+        $this->disk->putFileAs($directory, $file2, $file2->getClientOriginalName());
 
         $response = $this->getWithQuery(
             $this->url,
@@ -30,20 +30,22 @@ class FilesApiListTest extends TestCase
             true
         );
         $response->assertOk();
-        $response->assertJson([
+        $response->assertJsonFragment(['data' => [
             [
                 'name' => $file1->getClientOriginalName(),
                 'created_at' => date(DATE_RFC3339, $file1->getCTime()),
                 'mime' => $file1->getMimeType(),
                 'url' => $path.'/'.$file1->getClientOriginalName(),
+                'isDir' => false
             ],
             [
                 'name' => $file2->getClientOriginalName(),
                 'created_at' => date(DATE_RFC3339, $file2->getCTime()),
                 'mime' => $file2->getMimeType(),
                 'url' => $path.'/'.$file2->getClientOriginalName(),
+                'isDir' => false
             ],
-        ]);
+        ]]);
     }
 
     public function testDirectoryListGivenDirectory()
@@ -52,10 +54,10 @@ class FilesApiListTest extends TestCase
         $file2 = UploadedFile::fake()->create('test.txt', 3, 'text/plain');
 
         $directory = '/test';
-        $path = rtrim('/storage'.$directory,'/');
+        $path = rtrim('/storage'.$directory, '/');
         $this->disk->makeDirectory('test');
-        $this->disk->putFileAs($directory,$file1, $file1->getClientOriginalName());
-        $this->disk->putFileAs($directory,$file2, $file2->getClientOriginalName());
+        $this->disk->putFileAs($directory, $file1, $file1->getClientOriginalName());
+        $this->disk->putFileAs($directory, $file2, $file2->getClientOriginalName());
 
         $response = $this->getWithQuery(
             $this->url,
@@ -66,20 +68,22 @@ class FilesApiListTest extends TestCase
             true
         );
         $response->assertOk();
-        $response->assertJson([
+        $response->assertJsonFragment(['data' => [
             [
                 'name' => $file1->getClientOriginalName(),
                 'created_at' => date(DATE_RFC3339, $file1->getCTime()),
                 'mime' => $file1->getMimeType(),
                 'url' => $path.'/'.$file1->getClientOriginalName(),
+                'isDir' => false
             ],
             [
                 'name' => $file2->getClientOriginalName(),
                 'created_at' => date(DATE_RFC3339, $file2->getCTime()),
                 'mime' => $file2->getMimeType(),
                 'url' => $path.'/'.$file2->getClientOriginalName(),
+                'isDir' => false
             ],
-        ]);
+        ]]);
     }
 
     public function testRecursiveListInDirectory()
@@ -87,8 +91,8 @@ class FilesApiListTest extends TestCase
         $file = UploadedFile::fake()->image('test.png');
         $fileName = $file->getClientOriginalName();
 
-        $this->disk->makeDirectory('/directory');
-        $this->disk->putFileAs('/directory',$file, $fileName);
+        $this->disk->makeDirectory('/directory', 0777, true, true);
+        $this->disk->putFileAs('/', $file, $fileName);
 
         $response = $this->getWithQuery(
             $this->url,
@@ -99,20 +103,22 @@ class FilesApiListTest extends TestCase
             true
         );
         $response->assertOk();
-        $response->assertJson([
+        $response->assertJsonFragment(['data' => [
             [
                 'name' => 'directory',
                 'created_at' => date(DATE_RFC3339, $file->getCTime()),
                 'mime' => 'directory',
                 'url' => $this->storagePath.'/directory',
+                'isDir' => true
             ],
             [
                 'name' => $fileName,
                 'created_at' => date(DATE_RFC3339, $file->getCTime()),
                 'mime' => $file->getMimeType(),
-                'url' => $this->storagePath.'/directory/'.$file->getClientOriginalName(),
+                'url' => $this->storagePath.'/'.$file->getClientOriginalName(),
+                'isDir' => false
             ],
-        ]);
+        ]]);
     }
 
     public function testListInvalidDirectory()

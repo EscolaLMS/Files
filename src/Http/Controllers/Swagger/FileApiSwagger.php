@@ -19,7 +19,7 @@ interface FileApiSwagger
 {
     /**
      * @OA\Get(
-     *     path="/api/file/list",
+     *     path="/api/admin/file/list",
      *     summary="Lists files prefixed by given directory name",
      *     tags={"Files"},
      *     security={
@@ -110,7 +110,7 @@ interface FileApiSwagger
 
     /**
      * @OA\Post(
-     *     path="/api/file/upload",
+     *     path="/api/admin/file/upload",
      *     summary="Upload files using multipart form-data",
      *     tags={"Files"},
      *     security={
@@ -168,7 +168,7 @@ interface FileApiSwagger
 
     /**
      * @OA\Post(
-     *     path="/api/file/move",
+     *     path="/api/admin/file/move",
      *     summary="Move the file from one path to another",
      *     tags={"Files"},
      *     security={
@@ -219,7 +219,7 @@ interface FileApiSwagger
 
     /**
      * @OA\Delete(
-     *     path="/api/file/delete",
+     *     path="/api/admin/file/delete",
      *     summary="Delete given file",
      *     tags={"Files"},
      *     security={
