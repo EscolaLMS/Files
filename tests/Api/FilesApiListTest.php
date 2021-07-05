@@ -105,7 +105,7 @@ class FilesApiListTest extends TestCase
         $response->assertOk();
         $response->assertJsonFragment(['data' => ['data' => [
             [
-                'name' => 'subdirectory',
+                'name' => 'directory',
                 'created_at' => date(DATE_RFC3339, $file->getCTime()),
                 'mime' => 'directory',
                 'url' => $this->storagePath.'/directory',
