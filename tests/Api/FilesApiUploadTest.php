@@ -84,7 +84,7 @@ class FilesApiUploadTest extends TestCase
                 'target' => $target,
             ],
         );
-        $response->assertStatus(409);
+        $response->assertStatus(200);
         $this->disk->assertExists($file->getClientOriginalName());
     }
 
