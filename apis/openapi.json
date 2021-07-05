@@ -5,7 +5,7 @@
         "version": "0.0.1"
     },
     "paths": {
-        "/api/file/list": {
+        "/api/admin/file/list": {
             "get": {
                 "tags": [
                     "Files"
@@ -91,13 +91,13 @@
                 ]
             }
         },
-        "/api/file/upload": {
+        "/api/admin/file/upload": {
             "post": {
                 "tags": [
                     "Files"
                 ],
                 "summary": "Upload files using multipart form-data",
-                "operationId": "e0dc9ce31c79e8a3587d2dcc55393cfb",
+                "operationId": "8330f052263ea8b57e1e056c6da07ca5",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -149,13 +149,13 @@
                 ]
             }
         },
-        "/api/file/move": {
+        "/api/admin/file/move": {
             "post": {
                 "tags": [
                     "Files"
                 ],
                 "summary": "Move the file from one path to another",
-                "operationId": "20b2d2c3a594aa873f78ac8c10f66b05",
+                "operationId": "4c85321835ff635cd0e1637f274c0c31",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -205,13 +205,13 @@
                 ]
             }
         },
-        "/api/file/delete": {
+        "/api/admin/file/delete": {
             "delete": {
                 "tags": [
                     "Files"
                 ],
                 "summary": "Delete given file",
-                "operationId": "b8e73d6b586c4b5a0d8416404e92710c",
+                "operationId": "4e5e7d4cd112ef1a8019ea9de3dc0c3b",
                 "parameters": [
                     {
                         "name": "url",
