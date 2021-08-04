@@ -54,7 +54,7 @@ class FileApiController extends EscolaLmsBaseController implements FileApiSwagge
             'per_page'=>  $perPage,
             'last_page' => ceil($list->count() / $perPage),
             'total' => $list->count(),
-            'data' => $list->forPage($page, $perPage)
+            'data' => $list->forPage($page, $perPage)->values()
         ];
 
         return $this->sendResponse($info, 'file list fetched successfully');
