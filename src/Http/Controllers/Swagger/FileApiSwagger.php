@@ -3,6 +3,7 @@
 namespace EscolaLms\Files\Http\Controllers\Swagger;
 
 use EscolaLms\Files\Http\Requests\FileDeleteRequest;
+use EscolaLms\Files\Http\Requests\FileFindByNameRequest;
 use EscolaLms\Files\Http\Requests\FileListingRequest;
 use EscolaLms\Files\Http\Requests\FileMoveRequest;
 use EscolaLms\Files\Http\Requests\FileUploadRequest;
@@ -107,6 +108,105 @@ interface FileApiSwagger
      * @return JsonResponse
      */
     public function list(FileListingRequest $request): JsonResponse;
+
+    /**
+     * @OA\Get(
+     *     path="/api/admin/file/find",
+     *     summary="Lists files found by name",
+     *     tags={"Files"},
+     *     security={
+     *         {"passport": {}},
+     *     },
+     *     @OA\Parameter(
+     *         name="directory",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *             default="/",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="name",
+     *         required=true,
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="int",
+     *             default="1",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="perPage",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="int",
+     *             default="50",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\MediaType(
+     *            mediaType="application/json",
+     *            @OA\Schema(
+     *                type="array",
+     *                @OA\Items(
+     *                    type="object",
+     *                    @OA\Property(
+     *                        property="name",
+     *                        type="string",
+     *                    ),
+     *                    @OA\Property(
+     *                        property="created_at",
+     *                        type="string",
+     *                        format="datetime",
+     *                    ),
+     *                    @OA\Property(
+     *                        property="mime",
+     *                        type="string",
+     *                        format="mime",
+     *                    ),
+     *                    @OA\Property(
+     *                        property="url",
+     *                        type="string",
+     *                        format="url",
+     *                    ),
+     *                ),
+     *            )
+     *         )
+     *      ),
+     *     @OA\Response(
+     *          response=401,
+     *          description="endpoint requires authentication",
+     *     ),
+     *     @OA\Response(
+     *          response=302,
+     *          description="request contains invalid parameters",
+     *     ),
+     *     @OA\Response(
+     *          response=403,
+     *          description="user doesn't have required access rights",
+     *      ),
+     *     @OA\Response(
+     *          response=405,
+     *          description="Target directory access is not allowed",
+     *      ),
+     *     @OA\Response(
+     *          response=500,
+     *          description="server-side error",
+     *      ),
+     * )
+     *
+     * @param FileFindByNameRequest $request
+     * @return JsonResponse
+     */
+    public function findByName(FileFindByNameRequest $request): JsonResponse;
 
     /**
      * @OA\Post(

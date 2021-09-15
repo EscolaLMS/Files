@@ -4,6 +4,7 @@ namespace EscolaLms\Files\Http\Controllers;
 
 use EscolaLms\Files\Http\Controllers\Swagger\FileApiSwagger;
 use EscolaLms\Files\Http\Requests\FileDeleteRequest;
+use EscolaLms\Files\Http\Requests\FileFindByNameRequest;
 use EscolaLms\Files\Http\Requests\FileListingRequest;
 use EscolaLms\Files\Http\Requests\FileMoveRequest;
 use EscolaLms\Files\Http\Requests\FileUploadRequest;
@@ -72,5 +73,26 @@ class FileApiController extends EscolaLmsBaseController implements FileApiSwagge
         $success = $this->service->delete($request->getParamUrl());
 
         return $this->sendResponse($success, 'file deleted successfully');
+    }
+
+    /**
+     * @param FileFindByNameRequest $request
+     * @return JsonResponse
+     */
+    public function findByName(FileFindByNameRequest $request): JsonResponse
+    {
+        $perPage = $request->getPerPage();
+        $page = $request->getPage();
+
+        $list = $this->service->findByName($request->getDirectory(), $request->getName());
+        $info = [
+            'current_page' => $page,
+            'per_page'=>  $perPage,
+            'last_page' => ceil($list->count() / $perPage),
+            'total' => $list->count(),
+            'data' => $list->forPage($page, $perPage)->values()
+        ];
+
+        return $this->sendResponse($info, 'file list fetched successfully');
     }
 }
