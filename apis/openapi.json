@@ -91,6 +91,101 @@
                 ]
             }
         },
+        "/api/admin/file/find": {
+            "get": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Lists files found by name",
+                "operationId": "e44bf310b28fa6bb9db5ffdfde83bd0e",
+                "parameters": [
+                    {
+                        "name": "directory",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "default": "/"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "int",
+                            "default": "1"
+                        }
+                    },
+                    {
+                        "name": "perPage",
+                        "in": "query",
+                        "schema": {
+                            "type": "int",
+                            "default": "50"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "datetime"
+                                            },
+                                            "mime": {
+                                                "type": "string",
+                                                "format": "mime"
+                                            },
+                                            "url": {
+                                                "type": "string",
+                                                "format": "url"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "endpoint requires authentication"
+                    },
+                    "302": {
+                        "description": "request contains invalid parameters"
+                    },
+                    "403": {
+                        "description": "user doesn't have required access rights"
+                    },
+                    "405": {
+                        "description": "Target directory access is not allowed"
+                    },
+                    "500": {
+                        "description": "server-side error"
+                    }
+                },
+                "security": [
+                    {
+                        "passport": []
+                    }
+                ]
+            }
+        },
         "/api/admin/file/upload": {
             "post": {
                 "tags": [
