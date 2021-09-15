@@ -15,4 +15,6 @@ interface FileServiceContract
     public function move(string $sourceUrl, string $destinationUrl): bool;
 
     public function delete(string $url): bool;
+
+    public function findByName(string  $directory, string $name): Collection;
 }

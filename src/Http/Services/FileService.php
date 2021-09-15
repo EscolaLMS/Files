@@ -89,6 +89,32 @@ class FileService implements FileServiceContract
     }
 
     /**
+     * @param string $directory
+     * @param string $name
+     * @return Collection
+     */
+    public function findByName(string $directory, string $name): Collection
+    {
+        try {
+            return collect($this->disk->listContents($directory, true))
+                ->filter(function (array $metadata) use ($name) {
+                    return str_contains($metadata['basename'], $name);
+                })
+                ->map(function (array $metadata) {
+                    return [
+                        'name' => $metadata['basename'],
+                        'url' =>  $this->disk->url($metadata['path']),
+                        'created_at' => date(DATE_RFC3339, $metadata['timestamp']),
+                        'mime' => $this->disk->mimeType($metadata['path']),
+                        'isDir' => $this->disk->mimeType($metadata['path']) === 'directory'
+                    ];
+                })->sortByDesc('isDir')->values();
+        } catch (\LogicException $exception) {
+            throw new DirectoryOutsideOfRootException($directory);
+        }
+    }
+
+    /**
      * @param string $url
      * @throws CannotDeleteFile
      * @throws DirectoryOutsideOfRootException
