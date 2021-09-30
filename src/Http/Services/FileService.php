@@ -22,12 +22,22 @@ class FileService implements FileServiceContract
         $this->disk = $manager->disk();
     }
 
+    private function cleanFilename(UploadedFile $file): string
+    {
+        return Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
+    }
+
+    private function cleanFilenameString(string $filename): string
+    {
+        return Str::slug(pathinfo($filename, PATHINFO_FILENAME)) . '.' . pathinfo($filename, PATHINFO_EXTENSION);
+    }
+
     public function findAll(string $directory, array $list): array
     {
         $ret = [];
         /** @var UploadedFile $file */
         foreach ($list as $file) {
-            $name = $file->getClientOriginalName();
+            $name = $this->cleanFilename($file);
             $path = $directory . '/' . $name;
 
             if ($this->disk->exists($path)) {
@@ -48,8 +58,7 @@ class FileService implements FileServiceContract
         $paths = [];
         /** @var UploadedFile $file */
         foreach ($list as $file) {
-            $filename = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
-            $path = $this->disk->putFileAs($directory, $file, $filename);
+            $path = $this->disk->putFileAs($directory, $file, $this->cleanFilename($file));
             if ($path === false) {
                 throw new PutAllException($file->getClientOriginalName(), $directory);
             }
@@ -100,7 +109,8 @@ class FileService implements FileServiceContract
             return collect($this->disk->listContents($directory, true))
                 ->filter(fn (array $metadata) => Str::contains($metadata['basename'], [
                     $name,
-                    Str::slug($name)
+                    Str::slug($name),
+                    $this->cleanFilenameString($name),
                 ]))
                 ->map(fn (array $metadata) => [
                     'name' => $metadata['basename'],
