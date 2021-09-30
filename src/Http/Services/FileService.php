@@ -11,6 +11,7 @@ use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class FileService implements FileServiceContract
 {
@@ -21,16 +22,26 @@ class FileService implements FileServiceContract
         $this->disk = $manager->disk();
     }
 
+    private function cleanFilename(UploadedFile $file): string
+    {
+        return Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
+    }
+
+    private function cleanFilenameString(string $filename): string
+    {
+        return Str::slug(pathinfo($filename, PATHINFO_FILENAME)) . '.' . pathinfo($filename, PATHINFO_EXTENSION);
+    }
+
     public function findAll(string $directory, array $list): array
     {
         $ret = [];
         /** @var UploadedFile $file */
         foreach ($list as $file) {
-            $name = $file->getClientOriginalName();
-            $path = $directory.'/'.$name;
+            $name = $this->cleanFilename($file);
+            $path = $directory . '/' . $name;
 
             if ($this->disk->exists($path)) {
-                $ret []= $path;
+                $ret[] = $path;
             }
         }
         return $ret;
@@ -47,21 +58,20 @@ class FileService implements FileServiceContract
         $paths = [];
         /** @var UploadedFile $file */
         foreach ($list as $file) {
-            $path = $this->disk->putFileAs($directory, $file, $file->getClientOriginalName());
+            $path = $this->disk->putFileAs($directory, $file, $this->cleanFilename($file));
             if ($path === false) {
                 throw new PutAllException($file->getClientOriginalName(), $directory);
             }
             $paths[] = $path;
         }
 
-        $results = collect($paths)->map(function (string $path) {
-            return [
+        $results = collect($paths)
+            ->map(fn (string $path) => [
                 'name' => $path,
                 'created_at' => date(DATE_RFC3339),
                 'mime' => $this->disk->mimeType($path),
                 'url' => $this->disk->url($path),
-            ];
-        });
+            ]);
 
         return $results->toArray();
     }
@@ -74,15 +84,15 @@ class FileService implements FileServiceContract
     {
         try {
             return collect($this->disk->listContents($directory, false))
-                ->map(function (array $metadata) {
-                    return [
-                        'name' => $metadata['basename'],
-                        'created_at' => date(DATE_RFC3339, $metadata['timestamp']),
-                        'mime' => $this->disk->mimeType($metadata['path']),
-                        'url' => $this->disk->url($metadata['path']),
-                        'isDir' => $this->disk->mimeType($metadata['path']) === 'directory'
-                    ];
-                })->sortByDesc('isDir')->values();
+                ->map(fn (array $metadata) => [
+                    'name' => $metadata['basename'],
+                    'created_at' => date(DATE_RFC3339, $metadata['timestamp']),
+                    'mime' => $this->disk->mimeType($metadata['path']),
+                    'url' => $this->disk->url($metadata['path']),
+                    'isDir' => $this->disk->mimeType($metadata['path']) === 'directory'
+                ])
+                ->sortByDesc('isDir')
+                ->values();
         } catch (\LogicException $exception) {
             throw new DirectoryOutsideOfRootException($directory);
         }
@@ -97,18 +107,20 @@ class FileService implements FileServiceContract
     {
         try {
             return collect($this->disk->listContents($directory, true))
-                ->filter(function (array $metadata) use ($name) {
-                    return str_contains($metadata['basename'], $name);
-                })
-                ->map(function (array $metadata) {
-                    return [
-                        'name' => $metadata['basename'],
-                        'url' =>  $this->disk->url($metadata['path']),
-                        'created_at' => date(DATE_RFC3339, $metadata['timestamp']),
-                        'mime' => $this->disk->mimeType($metadata['path']),
-                        'isDir' => $this->disk->mimeType($metadata['path']) === 'directory'
-                    ];
-                })->sortByDesc('isDir')->values();
+                ->filter(fn (array $metadata) => Str::contains($metadata['basename'], [
+                    $name,
+                    Str::slug($name),
+                    $this->cleanFilenameString($name),
+                ]))
+                ->map(fn (array $metadata) => [
+                    'name' => $metadata['basename'],
+                    'url' =>  $this->disk->url($metadata['path']),
+                    'created_at' => date(DATE_RFC3339, $metadata['timestamp']),
+                    'mime' => $this->disk->mimeType($metadata['path']),
+                    'isDir' => $this->disk->mimeType($metadata['path']) === 'directory'
+                ])
+                ->sortByDesc('isDir')
+                ->values();
         } catch (\LogicException $exception) {
             throw new DirectoryOutsideOfRootException($directory);
         }

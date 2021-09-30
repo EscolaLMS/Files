@@ -4,6 +4,7 @@ namespace EscolaLms\Files\Tests\Api;
 
 use EscolaLms\Files\Tests\TestCase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Str;
 
 class FilesApiUploadTest extends TestCase
 {
@@ -19,7 +20,9 @@ class FilesApiUploadTest extends TestCase
             ],
         );
         $response->assertStatus(200);
-        $this->disk->assertExists($file->getClientOriginalName());
+
+        $filename = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
+        $this->disk->assertExists($filename);
     }
 
     public function testSingleFileUploadInvalidContentType()
@@ -32,7 +35,7 @@ class FilesApiUploadTest extends TestCase
                 'file' => [$file],
                 'target' => $target,
             ],
-            ['Content-Type'=>'application/json'],
+            ['Content-Type' => 'application/json'],
         );
         $response->assertStatus(302);
         $this->disk->assertMissing($file->getClientOriginalName());
@@ -74,7 +77,10 @@ class FilesApiUploadTest extends TestCase
             ],
         );
         $response->assertStatus(200);
-        $this->disk->assertExists($file->getClientOriginalName());
+
+        $filename = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
+
+        $this->disk->assertExists($filename);
 
         $file = UploadedFile::fake()->image('duplicate');
         $response = $this->actingAs(auth()->user(), 'api')->post(
@@ -85,7 +91,7 @@ class FilesApiUploadTest extends TestCase
             ],
         );
         $response->assertStatus(200);
-        $this->disk->assertExists($file->getClientOriginalName());
+        $this->disk->assertExists($filename);
     }
 
     /**

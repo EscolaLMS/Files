@@ -2,13 +2,13 @@
 
 namespace EscolaLms\Files\Http\Controllers;
 
+use EscolaLms\Core\Http\Controllers\EscolaLmsBaseController;
 use EscolaLms\Files\Http\Controllers\Swagger\FileApiSwagger;
 use EscolaLms\Files\Http\Requests\FileDeleteRequest;
 use EscolaLms\Files\Http\Requests\FileFindByNameRequest;
 use EscolaLms\Files\Http\Requests\FileListingRequest;
 use EscolaLms\Files\Http\Requests\FileMoveRequest;
 use EscolaLms\Files\Http\Requests\FileUploadRequest;
-use EscolaLms\Core\Http\Controllers\EscolaLmsBaseController;
 use EscolaLms\Files\Http\Services\Contracts\FileServiceContract;
 use Illuminate\Http\JsonResponse;
 
@@ -52,7 +52,7 @@ class FileApiController extends EscolaLmsBaseController implements FileApiSwagge
         $list = $this->service->listInfo($request->getDirectory());
         $info = [
             'current_page' => $page,
-            'per_page'=>  $perPage,
+            'per_page' => $perPage,
             'last_page' => ceil($list->count() / $perPage),
             'total' => $list->count(),
             'data' => $list->forPage($page, $perPage)->values()
@@ -87,7 +87,7 @@ class FileApiController extends EscolaLmsBaseController implements FileApiSwagge
         $list = $this->service->findByName($request->getDirectory(), $request->getName());
         $info = [
             'current_page' => $page,
-            'per_page'=>  $perPage,
+            'per_page' => $perPage,
             'last_page' => ceil($list->count() / $perPage),
             'total' => $list->count(),
             'data' => $list->forPage($page, $perPage)->values()
