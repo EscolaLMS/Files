@@ -9,7 +9,7 @@ Files browser package
 [![downloads](https://img.shields.io/packagist/dt/escolalms/files)](https://packagist.org/packages/escolalms/files)
 [![downloads](https://img.shields.io/packagist/v/escolalms/files)](https://packagist.org/packages/escolalms/files)
 [![downloads](https://img.shields.io/packagist/l/escolalms/files)](https://packagist.org/packages/escolalms/files)
-
+[![Maintainability](https://api.codeclimate.com/v1/badges/99e3f317974d77113a6a/maintainability)](https://codeclimate.com/github/EscolaLMS/Files/maintainability)
 
 Reusage files API 
 
