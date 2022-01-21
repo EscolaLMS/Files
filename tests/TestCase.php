@@ -6,6 +6,7 @@ use EscolaLms\Core\EscolaLmsServiceProvider;
 use EscolaLms\Core\Models\User;
 use EscolaLms\Files\Database\Seeders\DatabaseSeeder;
 use EscolaLms\Files\Database\Seeders\PermissionTableSeeder;
+use EscolaLms\Files\Enums\FilePermissionsEnum;
 use EscolaLms\Files\EscolaLmsFilesServiceProvider;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -29,10 +30,10 @@ class TestCase extends \EscolaLms\Core\Tests\TestCase
 
         $user = User::factory()->create();
         $user->givePermissionTo(
-            "list:files",
-            "upload:files",
-            "move:files",
-            "delete:files",
+            FilePermissionsEnum::FILE_LIST,
+            FilePermissionsEnum::FILE_DELETE,
+            FilePermissionsEnum::FILE_UPDATE,
+            FilePermissionsEnum::FILE_CREATE,
         );
         Auth::setUser($user);
     }
