@@ -2,6 +2,7 @@
 
 namespace EscolaLms\Files\Http\Requests;
 
+use EscolaLms\Files\Enums\FilePermissionsEnum;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -14,7 +15,7 @@ class FileMoveRequest extends FormRequest
     {
         /** @var User $user */
         $user = $this->user();
-        return $user!=null && $user->can('move:files', 'api');
+        return $user!=null && $user->can(FilePermissionsEnum::FILE_UPDATE, 'api');
     }
 
     /**
