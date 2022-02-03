@@ -1,0 +1,22 @@
+<?php
+
+namespace EscolaLms\Files\Helpers;
+
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+
+class FileHelper
+{
+    public static function getFilePath($fileOrString, string $destinationPath = '/'): ?string
+    {
+        if (is_a($fileOrString, UploadedFile::class)) {
+            return $fileOrString->storePublicly($destinationPath);
+        }
+
+        if (is_string($fileOrString) && Storage::exists($fileOrString)) {
+            return $fileOrString;
+        }
+
+        return null;
+    }
+}
