@@ -10,7 +10,7 @@ class FileHelper
     public static function getFilePath($fileOrString, string $destinationPath = '/'): ?string
     {
         if (is_a($fileOrString, UploadedFile::class)) {
-            return $fileOrString->storePublicly($destinationPath);
+            return $fileOrString->storePubliclyAs($destinationPath, $fileOrString->getClientOriginalName());
         }
 
         if (is_string($fileOrString) && Storage::exists($fileOrString)) {

@@ -21,6 +21,7 @@ class FileHelperTest extends TestCase
 
         $pathToSavedFile = FileHelper::getFilePath(UploadedFile::fake()->image('newFile.jpg'));
         Storage::assertExists($pathToSavedFile);
+        $this->assertEquals('newFile.jpg', basename($pathToSavedFile));
 
         $this->assertEquals($fullPath, FileHelper::getFilePath($fullPath));
         $this->assertNull(FileHelper::getFilePath($file));
