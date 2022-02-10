@@ -1,6 +1,6 @@
 <?php
 
-namespace EscolaLms\Files\Tests\Helpers;
+namespace EscolaLms\Files\Tests\Rules;
 
 use EscolaLms\Files\Rules\FileOrStringRule;
 use EscolaLms\Files\Tests\TestCase;
