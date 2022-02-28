@@ -58,7 +58,7 @@ class FileService implements FileServiceContract
         $paths = [];
         /** @var UploadedFile $file */
         foreach ($list as $file) {
-            $path = $this->disk->putFileAs($directory, $file, $this->cleanFilename($file));
+            $path = $this->disk->putFileAs($directory, $file, $this->cleanFilename($file), 'public');
             if ($path === false) {
                 throw new PutAllException($file->getClientOriginalName(), $directory);
             }
@@ -86,7 +86,7 @@ class FileService implements FileServiceContract
             return collect($this->disk->listContents($directory, false))
                 ->map(fn (array $metadata) => [
                     'name' => $metadata['basename'],
-                    'created_at' => date(DATE_RFC3339, $metadata['timestamp']),
+                    'created_at' => isset($metadata['timestamp']) ? date(DATE_RFC3339, $metadata['timestamp']) : null,
                     'mime' => $this->disk->mimeType($metadata['path']),
                     'url' => $this->disk->url($metadata['path']),
                     'isDir' => $this->disk->mimeType($metadata['path']) === 'directory'
@@ -115,7 +115,7 @@ class FileService implements FileServiceContract
                 ->map(fn (array $metadata) => [
                     'name' => $metadata['basename'],
                     'url' =>  $this->disk->url($metadata['path']),
-                    'created_at' => date(DATE_RFC3339, $metadata['timestamp']),
+                    'created_at' => isset($metadata['timestamp']) ? date(DATE_RFC3339, $metadata['timestamp']) : null,
                     'mime' => $this->disk->mimeType($metadata['path']),
                     'isDir' => $this->disk->mimeType($metadata['path']) === 'directory'
                 ])
@@ -133,7 +133,7 @@ class FileService implements FileServiceContract
      */
     public function delete(string $url): bool
     {
-        $prefix = $this->disk->url('');
+        $prefix = $this->disk->url('/');
         if (substr($url, 0, strlen($prefix)) === $prefix) {
             $path = substr($url, strlen($prefix));
         } else {
@@ -181,7 +181,7 @@ class FileService implements FileServiceContract
 
     private function urlToPath(string $url): string
     {
-        $prefix = $this->disk->url('');
+        $prefix = $this->disk->url('/');
         if (substr($url, 0, strlen($prefix)) === $prefix) {
             $path = substr($url, strlen($prefix));
         } else {

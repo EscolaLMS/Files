@@ -14,7 +14,7 @@ class FilesApiMoveTest extends TestCase
         $source = UploadedFile::fake()->image('test.png');
         $this->disk->putFileAs('/', $source, $source->getClientOriginalName());
 
-        $sourceUrl = '/storage/'.$source->getClientOriginalName();
+        $sourceUrl = $source->getClientOriginalName();
         $destinationUrl = '/storage/test2.png';
 
         $response = $this->actingAs(auth()->user(), 'api')->postJson($this->url,['source_url'=>$sourceUrl, 'destination_url'=>$destinationUrl]);
@@ -26,7 +26,7 @@ class FilesApiMoveTest extends TestCase
         $source = UploadedFile::fake()->image('test.png');
         $this->disk->putFileAs('/', $source, $source->getClientOriginalName());
 
-        $sourceUrl = '/storage/'.$source->getClientOriginalName();
+        $sourceUrl = $source->getClientOriginalName();
         $destinationUrl = '/storage/subdirectory/test2.png';
 
         $response = $this->actingAs(auth()->user(), 'api')->postJson($this->url,['source_url'=>$sourceUrl, 'destination_url'=>$destinationUrl]);
@@ -38,7 +38,7 @@ class FilesApiMoveTest extends TestCase
         $source = UploadedFile::fake()->image('test.png');
         $this->disk->putFileAs('/subdirectory', $source, $source->getClientOriginalName());
 
-        $sourceUrl = '/storage/subdirectory/'.$source->getClientOriginalName();
+        $sourceUrl = 'subdirectory/'.$source->getClientOriginalName();
         $destinationUrl = '/test2.png';
 
         $response = $this->actingAs(auth()->user(), 'api')->postJson($this->url,['source_url'=>$sourceUrl, 'destination_url'=>$destinationUrl]);
