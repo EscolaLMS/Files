@@ -13,7 +13,7 @@ class FilesApiDeleteTest extends TestCase
     {
         $file = UploadedFile::fake()->image('test.png');
         $this->disk->putFileAs('/', $file, $file->getClientOriginalName());
-        $response = $this->deleteWithQuery($this->url, ['url'=>'/storage/'.$file->getClientOriginalName()], [], true);
+        $response = $this->deleteWithQuery($this->url, ['url'=>$file->getClientOriginalName()], [], true);
         $response->assertOk();
     }
 
@@ -21,7 +21,7 @@ class FilesApiDeleteTest extends TestCase
     {
         $file = UploadedFile::fake()->image('test.png');
         $this->disk->putFileAs('/directory', $file, $file->getClientOriginalName());
-        $response = $this->deleteWithQuery($this->url, ['url'=>'/storage/directory/'.$file->getClientOriginalName()], [], true);
+        $response = $this->deleteWithQuery($this->url, ['url'=>'directory/'.$file->getClientOriginalName()], [], true);
         $response->assertOk();
     }
 
@@ -29,7 +29,7 @@ class FilesApiDeleteTest extends TestCase
     {
         $file = UploadedFile::fake()->image('test.png');
         $this->disk->putFileAs('/directory', $file, $file->getClientOriginalName());
-        $response = $this->deleteWithQuery($this->url, ['url'=>'/storage/directory'], [], true);
+        $response = $this->deleteWithQuery($this->url, ['url'=>'directory'], [], true);
         $response->assertOk();
     }
 
@@ -41,7 +41,7 @@ class FilesApiDeleteTest extends TestCase
 
     public function testDeleteOutOfBounds()
     {
-        $response = $this->deleteWithQuery($this->url, ['url'=>'/storage/../oauth-private.key'], [], true);
+        $response = $this->deleteWithQuery($this->url, ['url'=>'../oauth-private.key'], [], true);
         $response->assertStatus(405);
     }
 }
