@@ -17,6 +17,7 @@ class PermissionTableSeeder extends Seeder
         $tutor = Role::findOrCreate('tutor', 'api');
         $permissions = [
             FilePermissionsEnum::FILE_LIST,
+            FilePermissionsEnum::FILE_LIST_SELF,
             FilePermissionsEnum::FILE_DELETE,
             FilePermissionsEnum::FILE_UPDATE,
             FilePermissionsEnum::FILE_CREATE,

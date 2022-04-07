@@ -2,6 +2,7 @@
 
 namespace EscolaLms\Files\Tests;
 
+use EscolaLms\Auth\EscolaLmsAuthServiceProvider;
 use EscolaLms\Core\EscolaLmsServiceProvider;
 use EscolaLms\Core\Models\User;
 use EscolaLms\Files\Database\Seeders\DatabaseSeeder;
@@ -46,6 +47,7 @@ class TestCase extends \EscolaLms\Core\Tests\TestCase
             EscolaLmsServiceProvider::class,
             PassportServiceProvider::class,
             PermissionServiceProvider::class,
+            EscolaLmsAuthServiceProvider::class,
         ];
     }
 
