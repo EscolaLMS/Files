@@ -14,7 +14,7 @@ class FileFindByNameRequest extends FormRequest
     {
         /** @var User $user */
         $user = $this->user();
-        return $user != null & ($user->can(FilePermissionsEnum::FILE_LIST, 'api') || $user->can(FilePermissionsEnum::FILE_LIST_SELF, 'api'));
+        return $user != null && ($user->can(FilePermissionsEnum::FILE_LIST, 'api') || $user->can(FilePermissionsEnum::FILE_LIST_SELF, 'api'));
     }
 
     /**
