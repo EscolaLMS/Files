@@ -2,6 +2,7 @@
 
 namespace EscolaLms\Files\Http\Services\Contracts;
 
+use EscolaLms\Core\Models\User;
 use Illuminate\Support\Collection;
 
 interface FileServiceContract
@@ -17,4 +18,8 @@ interface FileServiceContract
     public function delete(string $url): bool;
 
     public function findByName(string  $directory, string $name): Collection;
+
+    public function addUserAccessToDirectory(User $user, string $directoryName): array;
+
+    public function removeUserAccessToDirectory(User $user, string $directoryName): array;
 }

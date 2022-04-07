@@ -2,9 +2,11 @@
 
 namespace EscolaLms\Files;
 
+use EscolaLms\Auth\EscolaLmsAuthServiceProvider;
 use EscolaLms\Files\Http\Exceptions\Handler;
 use EscolaLms\Files\Http\Services\Contracts\FileServiceContract;
 use EscolaLms\Files\Http\Services\FileService;
+use EscolaLms\Files\Providers\EventServiceProvider;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Support\ServiceProvider;
 
@@ -28,6 +30,8 @@ class EscolaLmsFilesServiceProvider extends ServiceProvider
         ];
         */
         parent::register();
+        $this->app->register(EscolaLmsAuthServiceProvider::class);
+        $this->app->register(EventServiceProvider::class);
     }
 
     public function boot()
@@ -39,5 +43,6 @@ class EscolaLmsFilesServiceProvider extends ServiceProvider
             __DIR__ . '/../database/seeders' => database_path('seeders'),
         ], 'files-seeders');
         $this->loadRoutesFrom(__DIR__ . '/routes.php');
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
     }
 }

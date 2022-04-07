@@ -2,8 +2,11 @@
 
 namespace EscolaLms\Files\Http\Requests;
 
+use EscolaLms\Core\Models\User;
+use EscolaLms\Files\Enums\FilePermissionsEnum;
 use EscolaLms\Files\Tests\TestCase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 
 class FilesApiFindByNameTest extends TestCase
@@ -143,6 +146,26 @@ class FilesApiFindByNameTest extends TestCase
             true
         );
         $response->assertStatus(302);
+    }
+
+    public function testFindByNameWithAccessToDirectories(): void
+    {
+        $user = User::factory()->create([
+            'access_to_directories' => json_encode(['course/1']),
+        ]);
+        $user->givePermissionTo(FilePermissionsEnum::FILE_LIST_SELF);
+
+        $path1 = UploadedFile::fake()->image('test.png')->storeAs('course/1', 'test.png');
+        $path2 =UploadedFile::fake()->image('test.png')->storeAs('course/2', 'test.png');
+
+        $this->actingAs($user, 'api')->getJson('/api/admin/file/find?' . http_build_query(['directory' => '/', 'name'=>'test.png']))
+            ->assertStatus(200)
+            ->assertJsonFragment([
+                'url' => Storage::url($path1)
+            ])
+            ->assertJsonMissing([
+                'url' => Storage::url($path2)
+            ]);
     }
 
 }

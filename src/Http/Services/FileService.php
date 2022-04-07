@@ -2,6 +2,9 @@
 
 namespace EscolaLms\Files\Http\Services;
 
+use EscolaLms\Auth\Repositories\Contracts\UserRepositoryContract;
+use EscolaLms\Core\Models\User;
+use EscolaLms\Files\Enums\FilePermissionsEnum;
 use EscolaLms\Files\Http\Exceptions\CannotDeleteFile;
 use EscolaLms\Files\Http\Exceptions\DirectoryOutsideOfRootException;
 use EscolaLms\Files\Http\Exceptions\MoveException;
@@ -16,10 +19,12 @@ use Illuminate\Support\Str;
 class FileService implements FileServiceContract
 {
     private FilesystemAdapter $disk;
+    private UserRepositoryContract $userRepository;
 
-    public function __construct(FilesystemManager $manager)
+    public function __construct(FilesystemManager $manager, UserRepositoryContract $userRepository)
     {
         $this->disk = $manager->disk();
+        $this->userRepository = $userRepository;
     }
 
     private function cleanFilename(UploadedFile $file): string
@@ -83,7 +88,10 @@ class FileService implements FileServiceContract
     public function listInfo(string $directory): Collection
     {
         try {
+            $user = auth()->user();
+
             return collect($this->disk->listContents($directory, false))
+                ->filter(fn (array $metadata) => $this->checkUserAccessToFile($user, $metadata['path']))
                 ->map(fn (array $metadata) => [
                     'name' => $metadata['basename'],
                     'created_at' => isset($metadata['timestamp']) ? date(DATE_RFC3339, $metadata['timestamp']) : null,
@@ -106,7 +114,10 @@ class FileService implements FileServiceContract
     public function findByName(string $directory, string $name): Collection
     {
         try {
+            $user = auth()->user();
+
             return collect($this->disk->listContents($directory, true))
+                ->filter(fn (array $metadata) => $this->checkUserAccessToFile($user, $metadata['path']))
                 ->filter(fn (array $metadata) => Str::contains($metadata['basename'], [
                     $name,
                     Str::slug($name),
@@ -188,5 +199,54 @@ class FileService implements FileServiceContract
             $path = $url;
         }
         return $path;
+    }
+
+    public function addUserAccessToDirectory(User $user, string $directoryName): array
+    {
+        $directories = $this->getUserAccessToDirectories($user);
+        $directories[] = $directoryName;
+        $this->saveUserAccessToDirectory($user, $directories);
+
+        return $directories;
+    }
+
+    public function removeUserAccessToDirectory(User $user, string $directoryName): array
+    {
+        $directories = $this->getUserAccessToDirectories($user);
+        $directories = array_values(array_filter($directories, fn($value) => $value !== $directoryName));
+        $this->saveUserAccessToDirectory($user, $directories);
+
+        return $directories;
+    }
+
+    private function getUserAccessToDirectories(User $user): array
+    {
+        return isset($user->access_to_directories)
+            ? json_decode($user->access_to_directories)
+            : [];
+    }
+
+    private function saveUserAccessToDirectory(User $user, array $directories): void
+    {
+        $this->userRepository->update([
+            'access_to_directories' => json_encode(array_unique($directories))
+        ], $user->getKey());
+    }
+
+    private function checkUserAccessToFile(User $user, string $path): bool
+    {
+        if ($user->can(FilePermissionsEnum::FILE_LIST, 'api')) {
+            return true;
+        }
+
+        $accessToDirectories = $this->getUserAccessToDirectories($user);
+
+        if ($this->disk->mimeType($path) === 'directory'
+            && count(array_intersect($this->disk->allDirectories($path), $accessToDirectories)) > 0
+        ) {
+            return true;
+        }
+
+        return Str::contains($path, $accessToDirectories);
     }
 }

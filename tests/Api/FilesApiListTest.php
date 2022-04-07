@@ -2,6 +2,8 @@
 
 namespace EscolaLms\Files\Tests\Api;
 
+use EscolaLms\Core\Models\User;
+use EscolaLms\Files\Enums\FilePermissionsEnum;
 use EscolaLms\Files\Tests\TestCase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -160,5 +162,44 @@ class FilesApiListTest extends TestCase
             true
         );
         $response->assertStatus(302);
+    }
+
+    public function testFileListWithAccessToDirectories(): void
+    {
+        $user = User::factory()->create([
+            'access_to_directories' => json_encode(['course/1']),
+        ]);
+        $user->givePermissionTo(FilePermissionsEnum::FILE_LIST_SELF);
+
+        Storage::makeDirectory('course/1/topic');
+        Storage::makeDirectory('course/2/topic');
+        UploadedFile::fake()->image('test1.png')->storeAs('course/1', 'test1.png');
+        UploadedFile::fake()->image('test2.png')->storeAs('course/2', 'test2.png');
+
+        $this->actingAs($user, 'api')->getJson('/api/admin/file/list?' . http_build_query(['directory' => '/']))
+            ->assertStatus(200)
+            ->assertJsonFragment([
+                'name' => 'course',
+                'mime' => 'directory',
+                'isDir' => true
+            ]);
+
+        $this->actingAs($user, 'api')->getJson('/api/admin/file/list?' . http_build_query(['directory' => 'course']))
+            ->assertStatus(200)
+            ->assertJsonFragment([
+                'name' => '1',
+            ])
+            ->assertJsonMissing([
+                'name' => '2',
+            ]);
+
+        $this->actingAs($user, 'api')->getJson('/api/admin/file/list?' . http_build_query(['directory' => 'course/1']))
+            ->assertStatus(200)
+            ->assertJsonFragment([
+                'name' => 'test1.png',
+            ])
+            ->assertJsonFragment([
+                'name' => 'topic',
+            ]);
     }
 }
