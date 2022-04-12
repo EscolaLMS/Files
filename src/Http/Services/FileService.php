@@ -240,7 +240,7 @@ class FileService implements FileServiceContract
         ], $user->getKey());
     }
 
-    private function checkUserAccessToFile(User $user, array $metadata): bool
+    private function checkUserAccessToFile(User $user, $metadata): bool
     {
         if ($user->can(FilePermissionsEnum::FILE_LIST, 'api')) {
             return true;
