@@ -91,13 +91,13 @@ class FileService implements FileServiceContract
             $user = auth()->user();
 
             return collect($this->disk->listContents($directory, false))
-                ->filter(fn (array $metadata) => $this->checkUserAccessToFile($user, $metadata['path']))
+                ->filter(fn (array $metadata) => $this->checkUserAccessToFile($user, $metadata))
                 ->map(fn (array $metadata) => [
                     'name' => $metadata['basename'],
                     'created_at' => isset($metadata['timestamp']) ? date(DATE_RFC3339, $metadata['timestamp']) : null,
                     'mime' => $this->disk->mimeType($metadata['path']),
                     'url' => $this->disk->url($metadata['path']),
-                    'isDir' => $this->disk->mimeType($metadata['path']) === 'directory'
+                    'isDir' => $metadata['type'] === 'dir',
                 ])
                 ->sortByDesc('isDir')
                 ->values();
@@ -117,7 +117,7 @@ class FileService implements FileServiceContract
             $user = auth()->user();
 
             return collect($this->disk->listContents($directory, true))
-                ->filter(fn (array $metadata) => $this->checkUserAccessToFile($user, $metadata['path']))
+                ->filter(fn (array $metadata) => $this->checkUserAccessToFile($user, $metadata))
                 ->filter(fn (array $metadata) => Str::contains($metadata['basename'], [
                     $name,
                     Str::slug($name),
@@ -128,7 +128,7 @@ class FileService implements FileServiceContract
                     'url' =>  $this->disk->url($metadata['path']),
                     'created_at' => isset($metadata['timestamp']) ? date(DATE_RFC3339, $metadata['timestamp']) : null,
                     'mime' => $this->disk->mimeType($metadata['path']),
-                    'isDir' => $this->disk->mimeType($metadata['path']) === 'directory'
+                    'isDir' => $metadata['type'] === 'dir',
                 ])
                 ->sortByDesc('isDir')
                 ->values();
@@ -233,7 +233,7 @@ class FileService implements FileServiceContract
         ], $user->getKey());
     }
 
-    private function checkUserAccessToFile(User $user, string $path): bool
+    private function checkUserAccessToFile(User $user, array $metadata): bool
     {
         if ($user->can(FilePermissionsEnum::FILE_LIST, 'api')) {
             return true;
@@ -241,12 +241,10 @@ class FileService implements FileServiceContract
 
         $accessToDirectories = $this->getUserAccessToDirectories($user);
 
-        if ($this->disk->mimeType($path) === 'directory'
-            && count(array_intersect($this->disk->allDirectories($path), $accessToDirectories)) > 0
-        ) {
+        if ($metadata['type'] === 'dir' && count(array_intersect($this->disk->allDirectories($metadata['path']), $accessToDirectories)) > 0) {
             return true;
         }
 
-        return Str::contains($path, $accessToDirectories);
+        return Str::contains($metadata['path'], $accessToDirectories);
     }
 }
