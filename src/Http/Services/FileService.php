@@ -129,7 +129,7 @@ class FileService implements FileServiceContract
                     Str::slug($name),
                     $this->cleanFilenameString($name),
                 ]))
-                ->map(fn (array $metadata) => [
+                ->map(fn ($metadata) => [
                     'name' => $metadata['basename'] ?? basename($metadata['path']),
                     'url' =>  $this->disk->url($metadata['path']),
                     'created_at' => isset($metadata['timestamp']) ? date(DATE_RFC3339, $metadata['timestamp']) : null,
