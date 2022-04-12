@@ -14,6 +14,7 @@ use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 class FileService implements FileServiceContract
@@ -88,17 +89,12 @@ class FileService implements FileServiceContract
     public function listInfo(string $directory): Collection
     {
         try {
+            $this->isOfBounds($directory);
             $user = auth()->user();
 
             return collect($this->disk->listContents($directory, false))
-                ->filter(fn (array $metadata) => $this->checkUserAccessToFile($user, $metadata['path']))
-                ->map(fn (array $metadata) => [
-                    'name' => $metadata['basename'],
-                    'created_at' => isset($metadata['timestamp']) ? date(DATE_RFC3339, $metadata['timestamp']) : null,
-                    'mime' => $this->disk->mimeType($metadata['path']),
-                    'url' => $this->disk->url($metadata['path']),
-                    'isDir' => $this->disk->mimeType($metadata['path']) === 'directory'
-                ])
+                ->filter(fn ($metadata) => $this->checkUserAccessToFile($user, $metadata))
+                ->map(fn ($metadata) => $this->metadataToArray($metadata))
                 ->sortByDesc('isDir')
                 ->values();
         } catch (\LogicException $exception) {
@@ -114,22 +110,17 @@ class FileService implements FileServiceContract
     public function findByName(string $directory, string $name): Collection
     {
         try {
+            $this->isOfBounds($directory);
             $user = auth()->user();
 
             return collect($this->disk->listContents($directory, true))
-                ->filter(fn (array $metadata) => $this->checkUserAccessToFile($user, $metadata['path']))
-                ->filter(fn (array $metadata) => Str::contains($metadata['basename'], [
+                ->filter(fn ($metadata) => $this->checkUserAccessToFile($user, $metadata))
+                ->filter(fn ($metadata) => Str::contains($metadata['basename'] ?? basename($metadata['path']), [
                     $name,
                     Str::slug($name),
                     $this->cleanFilenameString($name),
                 ]))
-                ->map(fn (array $metadata) => [
-                    'name' => $metadata['basename'],
-                    'url' =>  $this->disk->url($metadata['path']),
-                    'created_at' => isset($metadata['timestamp']) ? date(DATE_RFC3339, $metadata['timestamp']) : null,
-                    'mime' => $this->disk->mimeType($metadata['path']),
-                    'isDir' => $this->disk->mimeType($metadata['path']) === 'directory'
-                ])
+                ->map(fn ($metadata) => $this->metadataToArray($metadata))
                 ->sortByDesc('isDir')
                 ->values();
         } catch (\LogicException $exception) {
@@ -151,8 +142,10 @@ class FileService implements FileServiceContract
             $path = $url;
         }
         try {
+            $this->isOfBounds($path);
+
             if ($this->disk->exists($path)) {
-                if ($this->disk->mimeType($path) === 'directory') {
+                if (File::isDirectory($this->disk->path($path))) {
                     $deleted = $this->disk->deleteDirectory($path);
                 } else {
                     $deleted = $this->disk->delete($path);
@@ -180,7 +173,7 @@ class FileService implements FileServiceContract
     public function move(string $sourceUrl, string $destinationUrl): bool
     {
         try {
-            $ret = $this->disk->rename($this->urlToPath($sourceUrl), $this->urlToPath($destinationUrl));
+            $ret = $this->disk->move($this->urlToPath($sourceUrl), $this->urlToPath($destinationUrl));
             if (!$ret) {
                 throw new MoveException($sourceUrl, $destinationUrl);
             }
@@ -233,20 +226,41 @@ class FileService implements FileServiceContract
         ], $user->getKey());
     }
 
-    private function checkUserAccessToFile(User $user, string $path): bool
+    private function checkUserAccessToFile(User $user, $metadata): bool
     {
         if ($user->can(FilePermissionsEnum::FILE_LIST, 'api')) {
             return true;
         }
 
         $accessToDirectories = $this->getUserAccessToDirectories($user);
+        $isDir = isset($metadata['type']) && $metadata['type'] === 'dir';
 
-        if ($this->disk->mimeType($path) === 'directory'
-            && count(array_intersect($this->disk->allDirectories($path), $accessToDirectories)) > 0
-        ) {
+        if ($isDir && count(array_intersect($this->disk->allDirectories($metadata['path']), $accessToDirectories)) > 0) {
             return true;
         }
 
-        return Str::contains($path, $accessToDirectories);
+        return Str::contains($metadata['path'], $accessToDirectories);
+    }
+
+    private function isOfBounds(string $path): bool
+    {
+        $re = ['#(/\.?/)#', '#/(?!\.\.)[^/]+/\.\./#'];
+        $abs = '/' . trim($path, '/');
+        for ($n = 1; $n > 0; $abs = preg_replace($re, '/', $abs, -1, $n)) {}
+        if (preg_match('/\.\.\//', $abs, $o)) {
+            throw new \LogicException();
+        }
+        return true;
+    }
+
+    private function metadataToArray($metadata): array
+    {
+        return [
+            'name' => $metadata['basename'] ?? basename($metadata['path']),
+            'url' =>  $this->disk->url($metadata['path']),
+            'created_at' => isset($metadata['timestamp']) ? date(DATE_RFC3339, $metadata['timestamp']) : (isset($metadata['last_modified']) ? date(DATE_RFC3339, $metadata['last_modified']) : null),
+            'mime' => isset($metadata['type']) && $metadata['type'] === 'file' ? $this->disk->mimeType($metadata['path']) : 'directory',
+            'isDir' => isset($metadata['type']) && $metadata['type'] === 'dir',
+        ];
     }
 }

@@ -11,7 +11,7 @@ class FileDeleteRequest extends FormRequest
     /**
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         /** @var User $user */
         $user = $this->user();
@@ -23,14 +23,14 @@ class FileDeleteRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'url' => ['required','string'],
         ];
     }
 
-    public function getAcceptableContentTypes()
+    public function getAcceptableContentTypes(): array
     {
         return ['multipart/form-data'];
     }
