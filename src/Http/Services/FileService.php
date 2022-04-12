@@ -89,10 +89,12 @@ class FileService implements FileServiceContract
     public function listInfo(string $directory): Collection
     {
         try {
+            $this->isOfBounds($directory);
+
             $user = auth()->user();
 
             return collect($this->disk->listContents($directory, false))
-                ->filter(fn (array $metadata) => $this->checkUserAccessToFile($user, $metadata))
+                ->filter(fn ($metadata) => $this->checkUserAccessToFile($user, $metadata))
                 ->map(fn (array $metadata) => [
                     'name' => $metadata['basename'],
                     'created_at' => isset($metadata['timestamp']) ? date(DATE_RFC3339, $metadata['timestamp']) : null,
@@ -115,6 +117,8 @@ class FileService implements FileServiceContract
     public function findByName(string $directory, string $name): Collection
     {
         try {
+            $this->isOfBounds($directory);
+
             $user = auth()->user();
 
             return collect($this->disk->listContents($directory, true))
@@ -152,6 +156,8 @@ class FileService implements FileServiceContract
             $path = $url;
         }
         try {
+            $this->isOfBounds($path);
+
             if ($this->disk->exists($path)) {
                 if (File::isDirectory($this->disk->path($path))) {
                     $deleted = $this->disk->deleteDirectory($path);
@@ -248,5 +254,13 @@ class FileService implements FileServiceContract
         }
 
         return Str::contains($metadata['path'], $accessToDirectories);
+    }
+
+    private function isOfBounds(string $path): bool
+    {
+        if (str_replace($this->disk->path(''), '', realpath($this->disk->path('') . '/' . $path)) === realpath($this->disk->path('') . '/' . $path)) {
+            throw new \LogicException();
+        }
+        return true;
     }
 }
