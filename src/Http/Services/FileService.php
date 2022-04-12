@@ -15,7 +15,6 @@ use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class FileService implements FileServiceContract
@@ -188,7 +187,7 @@ class FileService implements FileServiceContract
     public function move(string $sourceUrl, string $destinationUrl): bool
     {
         try {
-            $ret = $this->disk->rename($this->urlToPath($sourceUrl), $this->urlToPath($destinationUrl));
+            $ret = $this->disk->move($this->urlToPath($sourceUrl), $this->urlToPath($destinationUrl));
             if (!$ret) {
                 throw new MoveException($sourceUrl, $destinationUrl);
             }
