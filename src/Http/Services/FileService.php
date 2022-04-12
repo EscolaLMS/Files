@@ -15,7 +15,6 @@ use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class FileService implements FileServiceContract
@@ -91,18 +90,11 @@ class FileService implements FileServiceContract
     {
         try {
             $this->isOfBounds($directory);
-
             $user = auth()->user();
 
             return collect($this->disk->listContents($directory, false))
                 ->filter(fn ($metadata) => $this->checkUserAccessToFile($user, $metadata))
-                ->map(fn ($metadata) => [
-                    'name' => $metadata['basename'] ?? basename($metadata['path']),
-                    'created_at' => isset($metadata['timestamp']) ? date(DATE_RFC3339, $metadata['timestamp']) : null,
-                    'mime' => $this->disk->mimeType($metadata['path']),
-                    'url' => $this->disk->url($metadata['path']),
-                    'isDir' => isset($metadata['type']) && $metadata['type'] === 'dir',
-                ])
+                ->map(fn ($metadata) => $this->metadataToArray($metadata))
                 ->sortByDesc('isDir')
                 ->values();
         } catch (\LogicException $exception) {
@@ -119,7 +111,6 @@ class FileService implements FileServiceContract
     {
         try {
             $this->isOfBounds($directory);
-
             $user = auth()->user();
 
             return collect($this->disk->listContents($directory, true))
@@ -129,13 +120,7 @@ class FileService implements FileServiceContract
                     Str::slug($name),
                     $this->cleanFilenameString($name),
                 ]))
-                ->map(fn ($metadata) => [
-                    'name' => $metadata['basename'] ?? basename($metadata['path']),
-                    'url' =>  $this->disk->url($metadata['path']),
-                    'created_at' => isset($metadata['timestamp']) ? date(DATE_RFC3339, $metadata['timestamp']) : null,
-                    'mime' => $this->disk->mimeType($metadata['path']),
-                    'isDir' => isset($metadata['type']) && $metadata['type'] === 'dir',
-                ])
+                ->map(fn ($metadata) => $this->metadataToArray($metadata))
                 ->sortByDesc('isDir')
                 ->values();
         } catch (\LogicException $exception) {
@@ -266,5 +251,16 @@ class FileService implements FileServiceContract
             throw new \LogicException();
         }
         return true;
+    }
+
+    private function metadataToArray($metadata): array
+    {
+        return [
+            'name' => $metadata['basename'] ?? basename($metadata['path']),
+            'url' =>  $this->disk->url($metadata['path']),
+            'created_at' => isset($metadata['timestamp']) ? date(DATE_RFC3339, $metadata['timestamp']) : (isset($metadata['last_modified']) ? date(DATE_RFC3339, $metadata['last_modified']) : null),
+            'mime' => isset($metadata['type']) && $metadata['type'] === 'file' ? $this->disk->mimeType($metadata['path']) : 'directory',
+            'isDir' => isset($metadata['type']) && $metadata['type'] === 'dir',
+        ];
     }
 }
