@@ -14,6 +14,7 @@ use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 class FileService implements FileServiceContract
@@ -152,7 +153,7 @@ class FileService implements FileServiceContract
         }
         try {
             if ($this->disk->exists($path)) {
-                if ($this->disk->mimeType($path) === 'directory') {
+                if (File::isDirectory($path)) {
                     $deleted = $this->disk->deleteDirectory($path);
                 } else {
                     $deleted = $this->disk->delete($path);
