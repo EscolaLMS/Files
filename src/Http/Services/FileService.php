@@ -97,7 +97,7 @@ class FileService implements FileServiceContract
                     'created_at' => isset($metadata['timestamp']) ? date(DATE_RFC3339, $metadata['timestamp']) : null,
                     'mime' => $this->disk->mimeType($metadata['path']),
                     'url' => $this->disk->url($metadata['path']),
-                    'isDir' => $metadata['type'] === 'dir',
+                    'isDir' => isset($metadata['type']) && $metadata['type'] === 'dir',
                 ])
                 ->sortByDesc('isDir')
                 ->values();
@@ -128,7 +128,7 @@ class FileService implements FileServiceContract
                     'url' =>  $this->disk->url($metadata['path']),
                     'created_at' => isset($metadata['timestamp']) ? date(DATE_RFC3339, $metadata['timestamp']) : null,
                     'mime' => $this->disk->mimeType($metadata['path']),
-                    'isDir' => $metadata['type'] === 'dir',
+                    'isDir' => isset($metadata['type']) && $metadata['type'] === 'dir',
                 ])
                 ->sortByDesc('isDir')
                 ->values();
@@ -240,8 +240,9 @@ class FileService implements FileServiceContract
         }
 
         $accessToDirectories = $this->getUserAccessToDirectories($user);
+        $isDir = isset($metadata['type']) && $metadata['type'] === 'dir';
 
-        if ($metadata['type'] === 'dir' && count(array_intersect($this->disk->allDirectories($metadata['path']), $accessToDirectories)) > 0) {
+        if ($isDir && count(array_intersect($this->disk->allDirectories($metadata['path']), $accessToDirectories)) > 0) {
             return true;
         }
 
