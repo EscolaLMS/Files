@@ -153,7 +153,7 @@ class FileService implements FileServiceContract
         }
         try {
             if ($this->disk->exists($path)) {
-                if (File::isDirectory($path)) {
+                if (File::isDirectory($this->disk->path($path))) {
                     $deleted = $this->disk->deleteDirectory($path);
                 } else {
                     $deleted = $this->disk->delete($path);
