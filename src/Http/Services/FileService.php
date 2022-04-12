@@ -90,6 +90,8 @@ class FileService implements FileServiceContract
     public function listInfo(string $directory): Collection
     {
         try {
+            $this->isOfBounds($directory);
+
             $user = auth()->user();
 
             return collect($this->disk->listContents($directory, false))
@@ -116,6 +118,8 @@ class FileService implements FileServiceContract
     public function findByName(string $directory, string $name): Collection
     {
         try {
+            $this->isOfBounds($directory);
+
             $user = auth()->user();
 
             return collect($this->disk->listContents($directory, true))
@@ -153,7 +157,9 @@ class FileService implements FileServiceContract
             $path = $url;
         }
         try {
-            if (Storage::exists($path)) {
+            $this->isOfBounds($path);
+
+            if ($this->disk->exists($path)) {
                 if (File::isDirectory($this->disk->path($path))) {
                     $deleted = $this->disk->deleteDirectory($path);
                 } else {
@@ -249,5 +255,16 @@ class FileService implements FileServiceContract
         }
 
         return Str::contains($metadata['path'], $accessToDirectories);
+    }
+
+    private function isOfBounds(string $path): bool
+    {
+        $re = ['#(/\.?/)#', '#/(?!\.\.)[^/]+/\.\./#'];
+        $abs = '/' . trim($path, '/');
+        for ($n = 1; $n > 0; $abs = preg_replace($re, '/', $abs, -1, $n)) {}
+        if (preg_match('/\.\.\//', $abs, $o)) {
+            throw new \LogicException();
+        }
+        return true;
     }
 }
