@@ -97,7 +97,7 @@ class FileService implements FileServiceContract
             return collect($this->disk->listContents($directory, false))
                 ->filter(fn ($metadata) => $this->checkUserAccessToFile($user, $metadata))
                 ->map(fn ($metadata) => [
-                    'name' => $metadata['basename'] ?? '',
+                    'name' => $metadata['basename'] ?? basename($metadata['path']),
                     'created_at' => isset($metadata['timestamp']) ? date(DATE_RFC3339, $metadata['timestamp']) : null,
                     'mime' => $this->disk->mimeType($metadata['path']),
                     'url' => $this->disk->url($metadata['path']),
@@ -124,13 +124,13 @@ class FileService implements FileServiceContract
 
             return collect($this->disk->listContents($directory, true))
                 ->filter(fn ($metadata) => $this->checkUserAccessToFile($user, $metadata))
-                ->filter(fn ($metadata) => Str::contains($metadata['basename'] ?? '', [
+                ->filter(fn ($metadata) => Str::contains($metadata['basename'] ?? basename($metadata['path']), [
                     $name,
                     Str::slug($name),
                     $this->cleanFilenameString($name),
                 ]))
                 ->map(fn (array $metadata) => [
-                    'name' => $metadata['basename'] ?? '',
+                    'name' => $metadata['basename'] ?? basename($metadata['path']),
                     'url' =>  $this->disk->url($metadata['path']),
                     'created_at' => isset($metadata['timestamp']) ? date(DATE_RFC3339, $metadata['timestamp']) : null,
                     'mime' => $this->disk->mimeType($metadata['path']),
