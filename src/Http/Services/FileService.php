@@ -135,12 +135,14 @@ class FileService implements FileServiceContract
      */
     public function delete(string $url): bool
     {
-        $prefix = $this->disk->url('/');
+        $prefix = trim($this->disk->url('/'), '/');
+
         if (substr($url, 0, strlen($prefix)) === $prefix) {
             $path = substr($url, strlen($prefix));
         } else {
             $path = $url;
         }
+
         try {
             $this->isOfBounds($path);
 
