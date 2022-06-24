@@ -1,6 +1,6 @@
 <?php
 
-namespace EscolaLms\Files\Tests\Rules;
+namespace EscolaLms\Files\Tests\Services;
 
 use EscolaLms\Core\Tests\CreatesUsers;
 use EscolaLms\Files\Http\Services\Contracts\FileServiceContract;
