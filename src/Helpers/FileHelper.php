@@ -23,4 +23,10 @@ class FileHelper
 
         return null;
     }
+
+    public static function getMimesRule(): ?string
+    {
+        $mimes = config('files.mimes');
+        return $mimes ? 'mimes:' . $mimes : null;
+    }
 }

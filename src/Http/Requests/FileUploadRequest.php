@@ -3,6 +3,7 @@
 namespace EscolaLms\Files\Http\Requests;
 
 use EscolaLms\Files\Enums\FilePermissionsEnum;
+use EscolaLms\Files\Helpers\FileHelper;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -27,7 +28,7 @@ class FileUploadRequest extends FormRequest
     {
         return [
             'target' => 'required',
-            'file' => 'required',
+            'file' => ['required', FileHelper::getMimesRule()],
         ];
     }
 }
