@@ -11,7 +11,7 @@ class FilesApiUploadTest extends TestCase
     public function testSingleFileUpload()
     {
         $target = '/';
-        $file = UploadedFile::fake()->image('file');
+        $file = UploadedFile::fake()->image('file.jpg');
         $response = $this->actingAs(auth()->user(), 'api')->post(
             '/api/admin/file/upload',
             [
@@ -28,7 +28,7 @@ class FilesApiUploadTest extends TestCase
     public function testSingleFileUploadInvalidContentType()
     {
         $target = '/';
-        $file = UploadedFile::fake()->image('file');
+        $file = UploadedFile::fake()->image('file.jpg');
         $response = $this->actingAs(auth()->user(), 'api')->post(
             '/api/admin/file/upload',
             [
@@ -43,7 +43,7 @@ class FilesApiUploadTest extends TestCase
 
     public function testSingleFileUploadMissingTarget()
     {
-        $file = UploadedFile::fake()->image('file');
+        $file = UploadedFile::fake()->image('file.jpg');
         $response = $this->actingAs(auth()->user(), 'api')->post(
             '/api/admin/file/upload',
             [
@@ -68,7 +68,7 @@ class FilesApiUploadTest extends TestCase
     public function testSingleDuplicateFileUpload()
     {
         $target = '/';
-        $file = UploadedFile::fake()->image('duplicate');
+        $file = UploadedFile::fake()->image('duplicate.jpg');
         $response = $this->actingAs(auth()->user(), 'api')->post(
             '/api/admin/file/upload',
             [
@@ -82,7 +82,7 @@ class FilesApiUploadTest extends TestCase
 
         $this->disk->assertExists($filename);
 
-        $file = UploadedFile::fake()->image('duplicate');
+        $file = UploadedFile::fake()->image('duplicate.jpg');
         $response = $this->actingAs(auth()->user(), 'api')->post(
             '/api/admin/file/upload',
             [
@@ -100,7 +100,7 @@ class FilesApiUploadTest extends TestCase
     public function testSingleFileDirectoryTraversalUpload()
     {
         $target = '../../';
-        $file = UploadedFile::fake()->image('file');
+        $file = UploadedFile::fake()->image('file.jpg');
         $response = $this->actingAs(auth()->user(), 'api')->post(
             '/api/admin/file/upload',
             [
@@ -110,5 +110,59 @@ class FilesApiUploadTest extends TestCase
         );
         $response->assertStatus(500);
         $this->disk->assertMissing($file->getClientOriginalName());
+    }
+
+    public function excludedFileExtensionProvider(): array
+    {
+        return [
+            ['html'],
+            ['php'],
+            ['css'],
+            ['java'],
+            ['h5p'],
+            ['m3u8'],
+            ['heic'],
+            ['xlsx'],
+        ];
+    }
+
+    public function allowedFileExtensionProvider(): array
+    {
+        $this->createApplication();
+        return array_map(fn ($item) => [$item], explode(',', config('files.mimes')));
+    }
+
+    /**
+     * @dataProvider allowedFileExtensionProvider
+     */
+    public function testAllowedFileExtensions(string $ext)
+    {
+        $file = UploadedFile::fake()->create('file.' . $ext);
+        $response = $this->actingAs(auth()->user(), 'api')->post(
+            '/api/admin/file/upload',
+            [
+                'file' => [$file],
+                'target' => '/',
+            ],
+        );
+
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @dataProvider excludedFileExtensionProvider
+     */
+    public function testExcludedFileExtensions(string $ext)
+    {
+        $file = UploadedFile::fake()->create('file.' . $ext);
+        $response = $this->actingAs(auth()->user(), 'api')->post(
+            '/api/admin/file/upload',
+            [
+                'file' => [$file],
+                'target' => '/',
+            ],
+        );
+
+        $response->assertStatus(302);
     }
 }
