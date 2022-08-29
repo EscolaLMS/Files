@@ -28,7 +28,8 @@ class FileUploadRequest extends FormRequest
     {
         return [
             'target' => 'required',
-            'file' => ['required', FileHelper::getMimesRule()],
+            'file' => ['required', 'array'],
+            'file.*' => ['required', FileHelper::getMimesRule()],
         ];
     }
 }
