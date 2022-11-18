@@ -45,5 +45,6 @@ class EscolaLmsFilesServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__ . '/routes.php');
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->mergeConfigFrom(__DIR__ . '/config/files.php', 'files');
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'file');
     }
 }
