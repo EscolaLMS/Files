@@ -13,10 +13,12 @@
         "orchestra/testbench": "^6"
     },
     "license": "MIT",
-    "authors": [{
-        "name": "Mariusz Gliwiński",
-        "email": "mariusz.gliwinski@escola.pl"
-    }],
+    "authors": [
+        {
+            "name": "Mariusz Gliwiński",
+            "email": "mariusz.gliwinski@escola.pl"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "EscolaLms\\Files\\": "src",
@@ -29,6 +31,11 @@
             "providers": [
                 "EscolaLms\\Files\\EscolaLmsFilesServiceProvider"
             ]
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
         }
     }
 }
