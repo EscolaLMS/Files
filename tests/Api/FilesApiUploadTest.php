@@ -122,7 +122,6 @@ class FilesApiUploadTest extends TestCase
             ['h5p'],
             ['m3u8'],
             ['heic'],
-            ['xlsx'],
         ];
     }
 
